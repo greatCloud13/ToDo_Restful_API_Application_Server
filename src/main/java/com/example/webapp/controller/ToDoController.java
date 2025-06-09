@@ -37,4 +37,10 @@ public class ToDoController {
         ApiResponse response = new ApiResponse(true, "success", toDo );
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/post")
+    public ResponseEntity<ToDo> update (@RequestBody ToDo toDo){
+        toDoService.updateToDo(toDo);
+        return ResponseEntity.ok(toDo);
+    }
 }

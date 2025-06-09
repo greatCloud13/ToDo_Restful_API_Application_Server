@@ -1,7 +1,6 @@
 package com.example.webapp;
 
 import com.example.webapp.entity.ToDo;
-import com.example.webapp.repository.ToDoMapper;
 import com.example.webapp.service.ToDoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;

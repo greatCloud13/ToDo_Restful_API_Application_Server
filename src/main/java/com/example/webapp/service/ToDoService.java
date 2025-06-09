@@ -1,5 +1,6 @@
 package com.example.webapp.service;
 
+import com.example.webapp.DTO.ToDoDTO;
 import com.example.webapp.entity.ToDo;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ToDoService {
     void insertToDo(ToDo toDo);
 
 //    ToDo Update
-    void updateToDo(ToDo toDo);
+    void updateToDo(Integer id, ToDoDTO toDoDTO);
 
 //    ToDo Delete
     void deleteToDo(Integer id);

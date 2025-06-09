@@ -1,5 +1,6 @@
 package com.example.webapp.service.impl;
 
+import com.example.webapp.DTO.ToDoDTO;
 import com.example.webapp.entity.ToDo;
 import com.example.webapp.repository.ToDoMapper;
 import com.example.webapp.service.ToDoService;
@@ -33,7 +34,13 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public void updateToDo(ToDo toDo) {
+    public void updateToDo(Integer id, ToDoDTO toDoDTO) {
+        ToDo toDo = ToDo.builder()
+                .id(id)
+                .todo(toDoDTO.getTodo())
+                .detail(toDoDTO.getDetail())
+                .build();
+
         toDoMapper.update(toDo);
     }
 

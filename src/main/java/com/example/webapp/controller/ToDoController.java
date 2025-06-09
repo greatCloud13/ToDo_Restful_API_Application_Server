@@ -46,8 +46,10 @@ public class ToDoController {
             summary = "ToDo 업데이트",
             description = """
                     ## ToDo 업데이트 API
-                    
                     기존의 ToDo를 업데이트 합니다.
+                    - 개발일자: 2025-06-10
+                    - 수정일자: .
+                    - 테스트 여부: 미실시
                     
                     ### 필수 입력 항목
                     - todo : 최대 50자

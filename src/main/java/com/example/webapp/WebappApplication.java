@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebappApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebappApplication.class, args).getBean(WebappApplication.class).exe();
+		SpringApplication.run(WebappApplication.class, args);
 	}
 
 //	DI
@@ -39,7 +39,7 @@ public class WebappApplication {
 		ToDo target = service.findByIdToDo(4);
 		target.setTodo("리포지토리 테스트 업데이트");
 		target.setDetail("DB 업데이트");
-		service.updateToDo(target);
+//		service.updateToDo(target);
 		System.out.println("=== 업데이트 확인 ===");
 		System.out.println(service.findByIdToDo(4));
 

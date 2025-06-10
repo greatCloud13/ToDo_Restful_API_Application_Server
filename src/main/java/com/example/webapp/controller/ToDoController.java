@@ -63,6 +63,19 @@ public class ToDoController {
         return ResponseEntity.ok(toDo);
     }
 
+    @Operation(
+        summary = "ToDo 삭제",
+        description = """
+                ## ToDo 삭제 API
+                기존의 ToDo를 선택하여 삭제합니다.
+                - 개발일자: 2025-06-10
+                - 수정일자: .
+                - 테스트 여부: 미실시
+                
+                ### 필수 입력 항목
+                - id : Integer
+                """
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         toDoService.deleteToDo(id);

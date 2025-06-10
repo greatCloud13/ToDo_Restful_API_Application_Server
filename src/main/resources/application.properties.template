@@ -1,0 +1,14 @@
+spring.application.name=webapp
+
+# PostgresQL 설정
+spring.datasource.driver-class-name=org.postgresql.Driver
+# DB 주소
+spring.datasource.url = jdbc:postgresql://localhost:5432/springdb
+# DB 로그인 ID
+spring.datasource.username=YOUR_USERNAME
+# DB 로그인 PW
+spring.datasource.password=YOUR_PASSWORD
+#SQL 초기화 여부
+spring.sql.init.mode=always
+#로깅 레벨
+logging.level.com.example.repository=DEBUG

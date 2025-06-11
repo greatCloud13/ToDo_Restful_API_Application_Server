@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * JWT 관련 설정값을 설정값에서 바딘딩 하는 클래스
  * @ConfigurationProperties를 사용하여 Typesafe하게 설정 관리
+ * ToDo Properties 파일로 분리 필요
  */
 
 @Data

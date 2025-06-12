@@ -17,6 +17,7 @@ public class JwtConstants {
     public static final String CLAIM_USER_ID = "userId";
     public static final String CLAIM_USERNAME = "username";
     public static final String CLAIM_AUTHORITIES = "authorities";
+    public static final String CLAIM_TOKEN_TYPE = "tokenType";
     public static final String CLAIM_ISSUED_AT = "iat";
     public static final String CLAIM_EXPIRES_AT = "exp";
 

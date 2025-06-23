@@ -1,7 +1,7 @@
-package com.example.webapp.service;
+package com.example.jwt.Service;
 
 import com.example.webapp.entity.User;
-import com.example.webapp.repository.UserRepository;
+import com.example.jwt.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Spring Security와 현재 도메인의 User 엔티티를 연결하는 서비스

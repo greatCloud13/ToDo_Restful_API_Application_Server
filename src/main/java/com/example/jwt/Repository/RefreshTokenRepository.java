@@ -1,4 +1,4 @@
-package com.example.webapp.repository;
+package com.example.jwt.Repository;
 
 public class RefreshTokenRepository {
 }

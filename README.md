@@ -2,7 +2,7 @@
 Spring Boot ToDo 관리 API
 
 ## Project Info
-인턴 기간 동안 .NET Framework, 학습한 형상 관리 방법을 활용하여 Spring Boot Restful 앱을 제작합니다.
+인턴 기간 동안 학습한 형상 관리, 아키텍처등을 활용하여 Spring Boot Restful 앱을 제작합니다.
 
 ## Dev Duration
 - 2025-06-08 ~ 진행중

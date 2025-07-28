@@ -31,7 +31,7 @@ public class JwtProperties {
      *  Refresh Token 만료 시간 (단위: ms)
      * 기본값: 7일 ( 604,800,)
      */
-    private long refreshTokenEExpiration = 7 * 24 * 60 * 1000L;
+    private long refreshTokenExpiration = 7 * 24 * 60 * 1000L;
 
     /*
     *   Authorization 헤더 토큰 접두사

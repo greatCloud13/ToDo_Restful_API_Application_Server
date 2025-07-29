@@ -61,11 +61,11 @@ public class JwtTokenProvider {
     * @return JWT Refresh Token
      */
     public String generateRefreshToken(Authentication authentication){
-        return generateToken(authentication, jwtProperties.getRefreshTokenEExpiration(), JwtConstants.REFRESH_TOKEN_TYPE);
+        return generateToken(authentication, jwtProperties.getRefreshTokenExpiration(), JwtConstants.REFRESH_TOKEN_TYPE);
     }
 
     /**
-    *   Username으로 Access Token 생성 (간편 메소드)
+    *   Username 으로 Access Token 생성 (간편 메소드)
     *
     * @param username 사용자명
     * @param authorities 권한 목록
@@ -76,14 +76,14 @@ public class JwtTokenProvider {
     }
 
     /**
-     *  Username으로 Refresh Token 생성 (간편 메소드)
+     *  Username 으로 Refresh Token 생성 (간편 메소드)
      *
      * @param username 사용자명
      * @param authorities 권한 목록
      * @return JWT Refresh Token
      */
     public String generateRefreshToken(String username, Collection<? extends GrantedAuthority> authorities){
-        return generateToken(username, authorities, jwtProperties.getRefreshTokenEExpiration(), JwtConstants.REFRESH_TOKEN_TYPE);
+        return generateToken(username, authorities, jwtProperties.getRefreshTokenExpiration(), JwtConstants.REFRESH_TOKEN_TYPE);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.jwt.config;
 
 import com.example.jwt.filter.JwtAuthenticationFilter;
+import com.example.jwt.handler.JwtAccessDeniedHandler;
 import com.example.jwt.handler.JwtAuthenticationEntryPoint;
 import com.example.jwt.provider.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,34 +55,26 @@ public class JwtConfiguration {
         return new JwtAuthenticationEntryPoint(objectMapper);
     }
 
+    /**
+     * JWT 접근 거부 핸들러 빈 등록
+     * 인증은 성공했지만 권한이 부족한 경우 처리
+     *
+     * @param objectMapper JSON 변환용 ObjectMapper
+     * @return JwtAccessDeniedHandler 인스턴스
+     */
+    @Bean
+    public JwtAccessDeniedHandler jwtAccessDeniedHandler(ObjectMapper objectMapper){
+        return new JwtAccessDeniedHandler(objectMapper);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * ObjectMapper 빈 등록
+     * JSON 직렬화/역직렬화에 사용
+     *
+     * @return ObjectMapper 인스턴스
+     */
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
+    }
 }

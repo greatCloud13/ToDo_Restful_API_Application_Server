@@ -1,0 +1,143 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: webapp
+
+  # 프로필 설정 (개발/운영 환경 분리)
+  profiles:
+    active: dev
+
+  # PostgreSQL 데이터베이스 설정 (properties 우선 적용)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springdb
+    username: springuser
+    password: p@ss
+
+  # SQL 초기화 설정 (properties 우선 적용)
+  sql:
+    init:
+      mode: always
+  
+  # JPA/Hibernate 설정
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 개발용 (운영에서는 validate 사용)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false  # OSIV 비활성화 (성능 최적화)
+  
+  # H2 콘솔 설정 (개발용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+  # Jackson 설정 (JSON 처리)
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: Asia/Seoul
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# JWT 설정
+app:
+  jwt:
+    # JWT 서명 키 (32자 이상, 운영환경에서는 환경변수 사용)
+    secret: ${JWT_SECRET:myJwtSecretKey123456789012345678901234567890}
+    
+    # Access Token 만료 시간 (15분)
+    access-token-expiration: 900000
+    
+    # Refresh Token 만료 시간 (7일)
+    refresh-token-expiration: 604800000
+    
+    # 토큰 접두사
+    token-prefix: "Bearer "
+    
+    # Authorization 헤더명
+    header-name: "Authorization"
+    
+    # JWT 발급자
+    issuer: "jwt-demo-api"
+    
+    # JWT 대상
+    audience: "jwt-demo-users"
+
+# 로깅 설정
+logging:
+  level:
+    com.example: DEBUG
+    com.example.repository: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 관리자 도구 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+---
+# 개발 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+
+---
+# 운영 환경 설정  
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  # 운영용 데이터베이스
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/springdb_prod}
+    username: ${DATABASE_USERNAME:springuser}
+    password: ${DATABASE_PASSWORD:p@ss}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 운영에서는 스키마 변경 금지
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  h2:
+    console:
+      enabled: false  # 운영에서는 H2 콘솔 비활성화
+
+# 운영 환경 JWT 설정 (환경변수 사용)
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900000}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}
+
+logging:
+  level:
+    com.example: INFO
+    com.example.repository: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

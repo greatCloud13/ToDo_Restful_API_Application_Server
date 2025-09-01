@@ -5,8 +5,10 @@ import com.example.webapp.service.ToDoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example")
+@EnableJpaRepositories(basePackages = "com.example")
 @RequiredArgsConstructor
 public class WebappApplication {
 

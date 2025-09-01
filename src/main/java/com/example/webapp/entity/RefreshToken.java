@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  *
   */
 @Entity
-@Table(name = "refreshToken_tokens",
+@Table(name = "refresh_Token_tokens",
     indexes = {
         @Index(name="idx_refresh_token_token", columnList = "token"),
         @Index(name="idx_refresh_token_user_id", columnList = "user_id"),

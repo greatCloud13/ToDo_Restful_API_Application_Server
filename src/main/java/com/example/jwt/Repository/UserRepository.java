@@ -103,7 +103,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param identifier 아이디
      * @return User 엔티티 (Optional)
      */
-    @Query("SELECT u FROM User u.user = :identifier OR u.email =identifier")
+    @Query("SELECT u FROM User u WHERE u.username = :identifier OR u.email = :identifier")
     Optional<User> findByUsernameOrEmail(@Param("identifier") String identifier);
 
     /**

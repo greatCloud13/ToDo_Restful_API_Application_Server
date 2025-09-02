@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import javax.print.attribute.HashPrintJobAttributeSet;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;

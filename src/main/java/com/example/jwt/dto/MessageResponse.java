@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 /**
  * 일반 메시지 응답 DTO
@@ -27,12 +26,6 @@ public class MessageResponse {
      */
     @Builder.Default
     private boolean success = true;
-
-    /**
-     * 응답 시간
-     */
-    @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now();
 
     /**
      * 추가 데이터 (선택사항)

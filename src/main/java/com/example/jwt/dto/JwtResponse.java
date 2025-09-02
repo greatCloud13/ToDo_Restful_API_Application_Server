@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,47 +18,46 @@ import java.util.List;
 @AllArgsConstructor
 public class JwtResponse {
 
-    /*
+    /**
     *   Access Token
     *   API 요청 시 인증에 사용되는 단기 토큰
      */
     private String accessToken;
 
-    /*
+    /**
     *   Refresh Token
     *   Access Token 갱신에 사용되는 장기 토큰
      */
     private String refreshToken;
 
-    /*
+    /**
     * 토큰 타입 (보통 "Bearer")
      */
     @Builder.Default
     private String tokenType = "Bearer";
 
-    /*
+    /**
     * Access Token  만료 시간 (초)
      */
 
     private Long expiresIn ;
 
-    /*
-    *   토큰 발급 시간
-     */
-    @Builder.Default
-    private LocalDateTime issuedAt = LocalDateTime.now();
-
-    /*
+    /**
     *   사용자 정보
      */
     private String username;
 
-    /*
+    /**
     *   사용자 권한 목록
      */
     private List<String> authorities;
 
-    /*
+    /**
+     * 추가정보
+     */
+    private String message;
+
+    /**
     * Access Token만으로 간단한 응답 생성
      */
     public static JwtResponse of(String accessToken, String username, Long expiresIn){
@@ -70,7 +68,7 @@ public class JwtResponse {
                 .build();
     }
 
-    /*
+    /**
     *   전체 토큰 정보로 응답 생성
      */
     public static JwtResponse of(String accessToken, String refreshToken, String username, Long expiresIn,

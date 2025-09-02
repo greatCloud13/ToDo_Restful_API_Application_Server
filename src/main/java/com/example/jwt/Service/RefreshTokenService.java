@@ -103,6 +103,28 @@ public class RefreshTokenService {
     }
 
     /**
+     * 사용자의 기존 Refresh Token 갱신
+     * 기존 토큰을 삭제하고 새로운 토큰 생성
+     *
+     * @param oldToken 기존 Refresh Token
+     * @return 새로운 RefreshToken Entity
+     */
+    @Transactional
+    public RefreshToken refreshToken(String oldToken){
+        RefreshToken refreshToken = findByToken(oldToken)
+                .orElseThrow(()->new InvalidJwtTokenException("유효하지 않은 Refresh Token입니다."));
+
+        // 만료검증
+        verifyExpiration(refreshToken);
+
+        // 새로운 토큰 생성
+        RefreshToken newToken = createRefreshToken(refreshToken.getUser().getId());
+
+        log.debug("Refresh Token 갱신 완료. 사용자: {}", refreshToken.getUser().getUsername());
+        return newToken;
+    }
+
+    /**
      * 사용자의 활성 Refresh Token 개수 조회
      *
      * @param userId 사용자 ID

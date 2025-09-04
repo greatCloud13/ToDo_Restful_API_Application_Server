@@ -46,6 +46,14 @@ public class SignupRequest {
             message = "비밀번호는 영문 대소문자, 숫자, 특수문자를 모두 포함해야 합니다.")
     private String password;
 
+
+    /**
+     * 초대코드
+     * 비공개 서비스이므로 개발자에게 문의
+     */
+    @NotBlank(message = "비공개 코드는 관리자에게 문의하세요.")
+    public String inviteCode;
+
     /**
      * 비밀번호 확인
      */
@@ -60,5 +68,7 @@ public class SignupRequest {
     public boolean isPasswordMatching() {
         return password != null && password.equals(confirmPassword);
     }
+
+
 
 }

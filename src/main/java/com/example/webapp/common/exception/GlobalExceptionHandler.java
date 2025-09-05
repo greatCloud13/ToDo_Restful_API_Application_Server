@@ -22,7 +22,7 @@ import java.util.Map;
  * 애플리케이션에서 발생하는 모든 예외를 중앙에서 처리
  */
 @Slf4j
-@RestControllerAdvice
+//@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**

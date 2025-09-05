@@ -1,6 +1,6 @@
 -- 테이블이 존재하면 삭제
 DROP TABLE IF EXISTS todos;
-DROP TABLE IF EXISTS users;
+--DROP TABLE IF EXISTS users;
 
 -- 테이블 만들기
 CREATE TABLE todos(

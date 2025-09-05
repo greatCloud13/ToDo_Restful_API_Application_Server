@@ -67,6 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(JwtConstants.PUBLIC_URLS).permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
 
                         .requestMatchers("/h2-console/**").permitAll()
 

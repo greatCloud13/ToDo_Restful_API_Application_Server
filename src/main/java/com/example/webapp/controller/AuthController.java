@@ -4,6 +4,7 @@ import com.example.jwt.Service.AuthService;
 import com.example.jwt.dto.*;
 import com.example.jwt.util.JwtConstants;
 import com.example.webapp.entity.User;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,33 +26,23 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /**
-     * 사용자 로그인
-     *
-     * @param loginRequest 로그인 요청 정보
-     * @return JWT 토큰 응답
-     */
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest){
-        log.info("로그인 요청: {}", loginRequest.getUsername());
-
-        JwtResponse jwtResponse = authService.login(loginRequest);
-
-        return ResponseEntity.ok(jwtResponse);
-    }
-
-    /**
-     * 사용자 회원가입
-     *
-     * @param signupRequest 회원가입 요청 정보
-     * @return 가입 결과 메시지
-     */
+    @Operation(
+            summary = "사용자 회원가입",
+            description = """
+                    ## 서비스 회원가입 API
+                    서비스에 회원가입 요청을 합니다.
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
+    @PostMapping("/signup")
     public ResponseEntity<MessageResponse> signup(@Valid @RequestBody SignupRequest signupRequest){
         log.info("회원가입 요청: {} ({})", signupRequest.getUsername(), signupRequest.getEmail());
 
         boolean emailAvailable = authService.isEmailAvailable(signupRequest.getEmail());
         boolean usernameAvailable = authService.isUsernameAvailable(signupRequest.getUsername());
         boolean isInvitedUser = signupRequest.getInviteCode().equals(JwtConstants.INVITE_CODE);
+        log.info("초대코드: {}", signupRequest.getInviteCode());
 
         if (!isInvitedUser) {
             MessageResponse response = MessageResponse.failure("초대코드가 일치하지 않습니다.");
@@ -63,7 +54,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
 
-        if (usernameAvailable) {
+        if (!usernameAvailable) {
             MessageResponse response = MessageResponse.failure("이미 사용 중인 사용자명입니다.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
@@ -78,12 +69,32 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Access Token 갱신
-     *
-     * @param request 토큰 갱신 요청 (Refresh Token 포함)
-     * @return 새로운 JWT 토큰 응답
-     */
+    @Operation(
+            summary = "사용자 로그인",
+            description = """
+                    ## 서비스 로그인 API
+                    Token을 제공받기 위한 로그인 요청을 합니다.
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+        log.info("로그인 요청: {}", loginRequest.getUsername());
+
+        JwtResponse jwtResponse = authService.login(loginRequest);
+
+        return ResponseEntity.ok(jwtResponse);
+    }
+    
+    @Operation(
+            summary = "Access Token 갱신",
+            description = """
+                    ## Access Token을 갱신합니다
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
     public ResponseEntity<JwtResponse> refreshToken(@Valid @RequestBody TokenRefreshRequest request){
         log.info("토큰 갱신 요청.");
 
@@ -92,12 +103,14 @@ public class AuthController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    /**
-     * 사용자 로그아웃
-     * 현재 인증된 사용자의 Refresh Token을 모두 삭제
-     *
-     * @return 로그아웃 결과 메시지
-     */
+    @Operation(
+            summary = "사용자 로그아웃",
+            description = """
+                    ## 사용자 로그아웃 후 토큰을 폐기합니다
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
     @PostMapping("/logout")
     public ResponseEntity<MessageResponse> logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -117,12 +130,14 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 사용자명 중복 확인
-     *
-     * @param username 확인할 사용자명
-     * @return 사용 가능 여부
-     */
+    @Operation(
+            summary = "사용자 아이디 중복확인",
+            description = """
+                    ## 요청한 아이디의 중복여부를 확인합니다
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
     @GetMapping("/check-username")
     public ResponseEntity<MessageResponse> checkUsername(@RequestParam String username) {
         log.debug("사용자명 중복 확인: {}", username);
@@ -138,12 +153,15 @@ public class AuthController {
         }
     }
 
-    /**
-     * 이메일 중복 확인
-     *
-     * @param email 확인할 이메일
-     * @return 사용 가능 여부
-     */
+
+    @Operation(
+            summary = "사용자 이메일 중복확인",
+            description = """
+                    ## 요청한 이메일의 중복여부를 확인합니다.
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
     @GetMapping("/check-email")
     public ResponseEntity<MessageResponse> checkEmail(@RequestParam String email) {
         log.debug("이메일 중복 확인: {}", email);
@@ -159,12 +177,15 @@ public class AuthController {
         }
     }
 
-    /**
-     * 현재 인증 상태 확인
-     * JWT 토큰이 유효한지 확인하는 엔드포인트
-     *
-     * @return 인증 상태 정보
-     */
+
+    @Operation(
+            summary = "토큰 유효 여부 확인",
+            description = """
+                    ## JWT 토큰이 유효한지 확인합니다.
+                    - 개발일자: 2025-09-05
+                    - 수정일자: .
+                    """
+    )
     @GetMapping("/status")
     public ResponseEntity<MessageResponse> getAuthStatus() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

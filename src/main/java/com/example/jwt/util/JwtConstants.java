@@ -41,6 +41,9 @@ public class JwtConstants {
 //    === 정규식 패턴 ===
     public static final String BEARER_TOKEN_PATTERN = "^Bearer\\s+(.+)$";
 
+//    === 가입 코드 ===
+    public static final String INVITE_CODE = "It is not public service please contact instagram:houroforange.99";
+
 
 //    === 토큰이 필요없는 URL 패턴 ===
     public static final String[] PUBLIC_URLS = {

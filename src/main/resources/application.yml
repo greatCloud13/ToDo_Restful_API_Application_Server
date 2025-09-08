@@ -9,18 +9,18 @@ spring:
   profiles:
     active: dev
 
-  # PostgreSQL 데이터베이스 설정 (properties 우선 적용)
+  # MySQL 데이터베이스 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/springdb
+    url: jdbc:mysql://localhost:3306/springdb?useSSL=false&serverTimezone=Asia/Seoul
     username: springuser
     password: p@ss
 
-  # SQL 초기화 설정 (properties 우선 적용)
+  # SQL 초기화 설정
   sql:
     init:
       mode: always
-  
+
   # JPA/Hibernate 설정
   jpa:
     hibernate:
@@ -29,15 +29,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false  # OSIV 비활성화 (성능 최적화)
-  
-  # H2 콘솔 설정 (개발용)
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
 
   # Jackson 설정 (JSON 처리)
   jackson:
@@ -51,22 +44,22 @@ app:
   jwt:
     # JWT 서명 키 (32자 이상, 운영환경에서는 환경변수 사용)
     secret: ${JWT_SECRET:myJwtSecretKey123456789012345678901234567890}
-    
+
     # Access Token 만료 시간 (15분)
     access-token-expiration: 900000
-    
+
     # Refresh Token 만료 시간 (7일)
     refresh-token-expiration: 604800000
-    
+
     # 토큰 접두사
     token-prefix: "Bearer "
-    
+
     # Authorization 헤더명
     header-name: "Authorization"
-    
+
     # JWT 발급자
     issuer: "jwt-demo-api"
-    
+
     # JWT 대상
     audience: "jwt-demo-users"
 
@@ -74,7 +67,7 @@ app:
 logging:
   level:
     com.example: DEBUG
-    com.example.repository: DEBUG
+    com.example.webapp: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
@@ -98,23 +91,35 @@ spring:
     activate:
       on-profile: dev
 
+  # 개발용 추가 JPA 설정
+  jpa:
+    properties:
+      hibernate:
+        use_sql_comments: true  # SQL 주석 추가
+        show_sql: true
+
 logging:
   level:
     org.springframework.web: DEBUG
+    com.example.webapp: TRACE
 
 ---
-# 운영 환경 설정  
+# 운영 환경 설정
 spring:
   config:
     activate:
       on-profile: prod
 
-  # 운영용 데이터베이스
+  # 운영용 MySQL 설정
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/springdb_prod}
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/springdb_prod}
     username: ${DATABASE_USERNAME:springuser}
     password: ${DATABASE_PASSWORD:p@ss}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
 
   jpa:
     hibernate:
@@ -122,11 +127,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  h2:
-    console:
-      enabled: false  # 운영에서는 H2 콘솔 비활성화
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
 # 운영 환경 JWT 설정 (환경변수 사용)
 app:
@@ -138,6 +139,7 @@ app:
 logging:
   level:
     com.example: INFO
-    com.example.repository: INFO
+    com.example.webapp: INFO
     org.springframework.security: WARN
     org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN

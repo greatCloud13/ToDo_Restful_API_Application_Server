@@ -1,9 +1,7 @@
-package com.example.webapp.DTO
+package com.example.webapp.DTO;
 
 import com.example.webapp.entity.ToDo;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Data;
 

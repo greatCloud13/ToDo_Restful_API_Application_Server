@@ -1,9 +1,16 @@
 package com.example.webapp.DTO;
 
 import com.example.webapp.entity.ToDo;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +19,8 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class TodoRequestDTO {
 
     @Schema(description = "제목")
@@ -30,6 +39,9 @@ public class TodoRequestDTO {
     private ToDo.TaskStatus status;
 
     @Schema(description = "마감일")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime targetDate;
 
 }

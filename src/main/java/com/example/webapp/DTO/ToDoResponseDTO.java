@@ -2,8 +2,10 @@ package com.example.webapp.DTO;
 
 import com.example.webapp.entity.ToDo;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ToDoResponseDTO {
 
     @Schema(description = "고유 id")

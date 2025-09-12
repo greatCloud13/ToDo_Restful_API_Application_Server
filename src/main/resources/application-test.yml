@@ -1,0 +1,38 @@
+# application-test.yml (테스트환경)
+spring:
+  # H2 인메모리 데이터베이스 (테스트용)
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+
+  # H2 콘솔 활성화 (테스트 시 디버깅용)
+  h2:
+    console:
+      enabled: true
+
+  # JPA 테스트 설정
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    open-in-view: false
+
+# JWT 테스트 설정
+app:
+  jwt:
+    secret: testJwtSecretKey123456789012345678901234567890
+    access-token-expiration: 3600000  # 1시간 (테스트용으로 길게)
+    refresh-token-expiration: 86400000  # 1일
+
+# 테스트용 로깅 (최소화)
+logging:
+  level:
+    com.example.webapp: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

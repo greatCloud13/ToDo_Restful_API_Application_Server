@@ -15,7 +15,7 @@ spring:
   # JPA 테스트 설정
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:

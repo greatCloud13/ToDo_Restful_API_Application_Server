@@ -42,7 +42,7 @@ jobs:
 
       # LEV 5. 애플리케이션 빌드 (테스트 통과 후)
       - name: Application Build
-        run: ./gradlew build -x test # -x t test: 테스트는 이미 했으니 스킵
+        run: ./gradlew build -x test
         # 실제 배포 가능한 JAR 파일 생성
 
       # LEV 6. Docker 빌드 환경 설정

@@ -81,22 +81,48 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # 기존 컨테이너 중지 및 제거
-            sudo docker stop spring-app || true
-            sudo docker rm spring-app || true
+            sudo docker -compose down || true
+            sudo docker container prune -f
             
-            # 이전 이미지 제거
-            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest || true
+            # docker-compose.yml 파일 생성
+            cat > docker-compose.yml << 'EOF'
+            version: '3.8'
+            services:
+              app:
+                image: ${{ secret.DOCKER_USERNAME }}/spring-boot-app:latest
+                ports:
+                  - "8080:8080"
+                depends_on:
+                  - mysql
+                environment:
+                  - SPRING_PROFILES_ACTIVE=docker
+                restart: unless-stopped
+              
+              mysql:
+                image: mysql:8.0
+                environment:
+                  MYSQL_DATABASE: springdb
+                  MYSQL_USER: springuser
+                  MYSQL_PASSWORD: p@ss
+                  MYSQL_ROOT_PASSWORD: rootpassword
+                ports:
+                  - "3306:3306"
+                volumes:
+                  - mysql_data:/var/lib/mysql
+                restart: unless-stopped
             
-            # 새 이미지 다운로드
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            volumes:
+              mysql_data:
+            EOF
             
-            # 새 컨테이너 실행
-            sudo docker run -d -p 8080:8080 --name spring-app ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            # 새 이미지 다운로드 및 실행
+            sudo docker-compose pull app
+            sudo docker-compose up -d
             
             # 배포 상태 확인
-            sleep 10
-            sudo docker ps | grep spring-app
-
+            sleep 15
+            sudo docker-compose ps
+            
 
       # LEV 9. 테스트 결과 저장 (디버깅용)
       - name: Test result save

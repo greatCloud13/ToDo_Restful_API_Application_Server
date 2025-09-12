@@ -74,7 +74,7 @@ jobs:
 
       # LEV 9. AWS EC2 자동 배포
       - name: AWS ECS Auto Deploy
-        uses: appleboy/ssh-action@1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu

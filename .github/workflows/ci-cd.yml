@@ -1,4 +1,4 @@
-name: Todo web application API prj CI
+name: Todo web application API prj CI/CD with Docker
 
 #언제 실행하는지 설정 (트리거 설정)
 on:
@@ -10,7 +10,7 @@ on:
     # main으로 들어오는 모든 PR은 반드시 검증 후 merge
 
 jobs:
-  #CI 작업 정의
+  #CI/CD 작업 정의 (테스트+빌드+Docker 배포)
   test:
     runs-on: ubuntu-latest #무료, 빠르고 안정적이므로 선정
 
@@ -26,48 +26,65 @@ jobs:
         with:
           java-version: '22'
           distribution: 'temurin' #안정적인 OpenJDK
+          cache: 'gradle' #Gradle 의존성 자동 캐싱
 
-      # LEV 3. 빌드 성능 최적화
-      - name: Build Performance Optimization(Gradle caching)
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      # 라이브러리를 다운로드하면 시간 낭비이므로 캐싱 (2-3분 단축)
-
-      # LEV 4. 실행 권한 설정
+      # LEV 3. 실행 권한 설정
       - name: Gradle run permission set
         run: chmod +x ./gradlew
         #리눅스 환경에서 gradlew 스크립트 실행 권한 부여
 
-      # LEV 5. 테스트 실행 (제일 중요)
-      - name: Test run
+      # LEV 4. 테스트 실행 (품질 검증 - 제일 중요!)
+      - name: Test Run
         run: ./gradlew test --info
         env:
-          SPRING_PROFILES_ACTIVE: test #테스트 전용 설정 사용
+          SPRING_PROFILES_ACTIVE: test # 테스트 전용 설정 사용
+        # 코드 품질 보장, 버그 조기 발견
 
-      # LEV 6. 빌드(테스트 통과시)
-      - name: Build
-        run: ./gradlew build -x test #-x test: 테스트는 이미 했으니 스킵
-        #실제 배포 가능한 JAR 파일 생성
+      # LEV 5. 애플리케이션 빌드 (테스트 통과 후)
+      - name: Application Build
+        run: ./gradlew build -x test # -x t test: 테스트는 이미 했으니 스킵
+        # 실제 배포 가능한 JAR 파일 생성
 
-      # LEV 7. 테스트 결과 저장
+      # LEV 6. Docker 빌드 환경 설정
+      - name: Docker Buildx setup
+        uses: docker/setup-buildx-action@v3
+        # Docker의 고급 빌드 기능 활성화 (멀티 플랫폼, 캐싱 등)
+
+      # LEV 7. Docker Hub 로그인
+      - name: Docker Hub Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          # GitHub Secrets에 저장된 Docker Hub 인증 정보 사용
+
+      # LEV 8. Docker 이미지 빌드 및 배포
+      - name: Docker Image Build & Push
+        uses: docker/build-push-action@v5
+        with:
+          context: . # 현재 디렉토리를 빌드 컨텍스트로 사용
+          push: true #빌드 후 Docker Hub에 자동 푸시
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:${{ github.sha }}
+          # latest 태그와 git commit hash 태그 동시 생성
+          cache-from: type=gha # GitHub Actions 캐시에서 읽기
+          cache-to: type=gha,mode=max # GitHub Actions 캐시에 저장
+          # Docker 레이어 캐싱으로 빌드 시간 단축
+
+      # LEV 9. 테스트 결과 저장 (디버깅용)
       - name: Test result save
         uses: actions/upload-artifact@v4
-        if: always() #성공/실패 관계없이 항상 업로드
+        if: always() # 성공/실패 관계없이 항상 업로드
         with:
           name: test-results
-          path: build/reports/tests/test
-          #어떤테스트가 실패 했는지 분석 가능
+          path: build/reports/tests/test/
+          # 테스트 실패 시 어떤 테스트가 실패했는지 분석 가능
 
-      # LEV 8. 빌드 결과물 저장
-      - name: JAR result save
-        uses: actions/upload-artifact@v4
-        with:
-          name: jar-artifact
-          path: build/libs/*.jar
-          #다음 단계(배포)에서 사용할 수 있도록 저장
+      # LEV 10. 빌드 완료 알림
+      - name: Build Status Notification
+        run: |
+          echo "CI/CD Pipeline confirm!"
+          echo "Docker image: ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest"
+          echo "Test result: GitHub Actions Artifacts check"
+          echo "AWS deploy set"

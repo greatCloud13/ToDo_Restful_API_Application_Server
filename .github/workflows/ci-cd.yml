@@ -72,6 +72,32 @@ jobs:
           cache-to: type=gha,mode=max # GitHub Actions 캐시에 저장
           # Docker 레이어 캐싱으로 빌드 시간 단축
 
+      # LEV 9. AWS EC2 자동 배포
+      - name: AWS ECS Auto Deploy
+        uses: appleboy/ssh-action@1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # 기존 컨테이너 중지 및 제거
+            sudo docker stop spring-app || true
+            sudo docker rm spring-app || true
+            
+            # 이전 이미지 제거
+            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest || true
+            
+            # 새 이미지 다운로드
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            
+            # 새 컨테이너 실행
+            sudo docker run -d -p 8080:8080 --name spring-app ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
+            
+            # 배포 상태 확인
+            sleep 10
+            sudo docker ps | grep spring-app
+
+
       # LEV 9. 테스트 결과 저장 (디버깅용)
       - name: Test result save
         uses: actions/upload-artifact@v4
@@ -81,10 +107,10 @@ jobs:
           path: build/reports/tests/test/
           # 테스트 실패 시 어떤 테스트가 실패했는지 분석 가능
 
-      # LEV 10. 빌드 완료 알림
-      - name: Build Status Notification
+      # LEV 10. 배포 완료 알림
+      - name: Deployment Status
         run: |
-          echo "CI/CD Pipeline confirm!"
+          echo "CI/CD Pipeline Success!"
           echo "Docker image: ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest"
-          echo "Test result: GitHub Actions Artifacts check"
-          echo "AWS deploy set"
+          echo "Deployed to: http://${{ secrets.EC2_HOST }}:8080"
+          echo "Health Check: http://${{ secrets.EC2_HOST }}:8080/actuator/health"

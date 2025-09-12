@@ -81,7 +81,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # 기존 컨테이너 중지 및 제거
-            sudo docker -compose down || true
+            sudo docker-compose down || true
             sudo docker container prune -f
             
             # docker-compose.yml 파일 생성
@@ -89,7 +89,7 @@ jobs:
             version: '3.8'
             services:
               app:
-                image: ${{ secret.DOCKER_USERNAME }}/spring-boot-app:latest
+                image: ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
                 ports:
                   - "8080:8080"
                 depends_on:

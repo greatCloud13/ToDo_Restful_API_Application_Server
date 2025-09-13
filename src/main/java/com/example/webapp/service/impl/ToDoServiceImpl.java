@@ -38,7 +38,7 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public TodoRequestDTO saveToDo(TodoRequestDTO toDoDTO, User user) {
+    public ToDo saveToDo(TodoRequestDTO toDoDTO, User user) {
 
         ToDo todo = ToDo.builder()
                 .title(toDoDTO.getTitle())
@@ -50,9 +50,7 @@ public class ToDoServiceImpl implements ToDoService {
                 .user(user)
                 .build();
 
-        todoRepository.save(todo);
-
-        return toDoDTO;
+        return todoRepository.save(todo);
     }
 
     @Override

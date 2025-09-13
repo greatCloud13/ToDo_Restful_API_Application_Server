@@ -30,7 +30,7 @@ public interface ToDoService {
      * @param toDoDTO 할 일객체
      * @return 등록된 할 일
      */
-    public TodoRequestDTO saveToDo(TodoRequestDTO toDoDTO, User user);
+    public ToDo saveToDo(TodoRequestDTO toDoDTO, User user);
 
     /**
      * 할 일 수정

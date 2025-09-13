@@ -32,6 +32,13 @@ public interface ToDoService {
      */
     public TodoRequestDTO saveToDo(TodoRequestDTO toDoDTO, User user);
 
+    /**
+     * 할 일 수정
+     * @param id 할일 고유 id
+     * @param updateToDo 수정할 할 일 객체
+     * @return 수정 결과
+     */
+    public TodoRequestDTO UpdateToDo(int id, TodoRequestDTO updateToDo);
 
 
 }

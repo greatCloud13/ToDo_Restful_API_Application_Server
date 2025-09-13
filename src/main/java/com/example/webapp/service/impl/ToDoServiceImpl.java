@@ -54,4 +54,21 @@ public class ToDoServiceImpl implements ToDoService {
 
         return toDoDTO;
     }
+
+    @Override
+    public TodoRequestDTO UpdateToDo(int id, TodoRequestDTO updateToDo) {
+
+        ToDo todo = todoRepository.findById(id).orElseThrow(()->new EntityNotFoundException(
+                "Todo Not Found"));
+
+        todo.setTitle(updateToDo.getTitle());
+        todo.setTaskPriority(updateToDo.getPriority());
+        todo.setCategory(updateToDo.getCategory());
+        todo.setMemo(updateToDo.getMemo());
+        todo.setStatus(updateToDo.getStatus());
+        todo.setPlanningDate(updateToDo.getTargetDate());
+
+        todoRepository.save(todo);
+        return updateToDo;
+    }
 }

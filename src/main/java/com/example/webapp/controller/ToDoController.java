@@ -103,15 +103,15 @@ public class ToDoController {
                     """
     )
     @PostMapping("/post")
-    public ResponseEntity<TodoRequestDTO> create(@RequestBody TodoRequestDTO requestDTO){
+    public ResponseEntity<ToDo> create(@RequestBody TodoRequestDTO requestDTO){
 
         User user = securityUtils.getCurrentUserOrThrow();
 
-        TodoRequestDTO requestDto = toDoService.saveToDo(requestDTO, user);
+        ToDo result = toDoService.saveToDo(requestDTO, user);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(requestDTO);
+                .body(result);
     }
 
 
@@ -133,7 +133,9 @@ public class ToDoController {
     @PatchMapping("/{id}")
     public ResponseEntity<TodoRequestDTO> update(@PathVariable Integer id, @RequestBody TodoRequestDTO requestDTO){
 
-        return ResponseEntity.ok(requestDTO);
+        TodoRequestDTO result = toDoService.UpdateToDo(id, requestDTO);
+
+        return ResponseEntity.ok(result);
     }
 
     @Operation(

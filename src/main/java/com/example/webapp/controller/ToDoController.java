@@ -33,6 +33,7 @@ public class ToDoController {
     private final ToDoService toDoService;
     private final SecurityUtils securityUtils;
 
+
     @Operation(
             summary = "ToDo 리스트 조회",
             description = """
@@ -46,11 +47,10 @@ public class ToDoController {
                     """
     )
     @GetMapping
-    public ResponseEntity<Page<ToDo>> getUserTodos(
-            Pageable pageable){
+    public ResponseEntity<Page<ToDoResponseDTO>> getUserTodos(Pageable pageable){
 
         User user = securityUtils.getCurrentUserOrThrow();
-        Page<ToDo> page = toDoService.findTodoListByUser(user, pageable);
+        Page<ToDoResponseDTO> page = toDoService.findTodoListByUser(user, pageable);
 
         return ResponseEntity.ok(page);
     }
@@ -72,21 +72,12 @@ public class ToDoController {
     @GetMapping("/{id}")
     public ResponseEntity<ToDoResponseDTO> detail(@PathVariable Integer id){
 
+        String username = SecurityUtils.getCurrentUsername();
 
-        ToDoResponseDTO response = ToDoResponseDTO.builder()
-                .id(1)
-                .title("마트 다녀오기")
-                .memo("고기 사기")
-                .taskPriority(ToDo.TaskPriority.MIDDLE)
-                .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                .category("일상")
-                .createdAt(LocalDateTime.now())
-                .build();
+        ToDoResponseDTO result = toDoService.findTodoById(id, username);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(result);
     }
-
-
 
 
     @Operation(
@@ -115,7 +106,6 @@ public class ToDoController {
     }
 
 
-
     @Operation(
             summary = "ToDo 업데이트",
             description = """
@@ -138,6 +128,7 @@ public class ToDoController {
         return ResponseEntity.ok(result);
     }
 
+
     @Operation(
         summary = "ToDo 삭제",
         description = """
@@ -153,7 +144,10 @@ public class ToDoController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
-        return ResponseEntity.ok(true);
+
+        boolean result = toDoService.DeleteTodo(id);
+
+        return ResponseEntity.ok().body(result);
     }
 
 
@@ -161,16 +155,14 @@ public class ToDoController {
             summary = "ToDo 상태 변경",
             description = """
                     ## ToDo 완료 API
-                    완료된 Todo의 상태를 변경합니다.
-                    
+                    선택한 Todo의 상태를 변경합니다.
                     """
 
     )
     @PostMapping("/status/{id}")
     public ResponseEntity<ToDo.TaskStatus> taskDone(@PathVariable Integer id, ToDo.TaskStatus status){
 
-
-        ToDo.TaskStatus result = ToDo.TaskStatus.COMPLETE;
+        ToDo.TaskStatus result = toDoService.UpdateStatus(id, status);
 
         return ResponseEntity.ok(result);
     }

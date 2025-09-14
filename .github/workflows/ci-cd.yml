@@ -81,7 +81,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # 기존 컨테이너 중지 및 제거
-            docker-compose down || true
+            /usr/local/bin/docker-compose down || true
             sudo docker container prune -f
             
             # docker-compose.yml 파일 생성
@@ -116,12 +116,12 @@ jobs:
             EOF
             
             # 새 이미지 다운로드 및 실행
-            sudo docker-compose pull app
-            sudo docker-compose up -d
+            sudo /usr/local/bin/docker-compose pull app
+            sudo /usr/local/bin/docker-compose up -d
             
             # 배포 상태 확인
             sleep 15
-            sudo docker-compose ps
+            sudo /usr/local/bin/docker-compose ps
             
 
       # LEV 9. 테스트 결과 저장 (디버깅용)

@@ -81,7 +81,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # 기존 컨테이너 중지 및 제거
-            /usr/bin/docker-compose down || true
+            docker-compose down || true
             sudo docker container prune -f
             
             # docker-compose.yml 파일 생성

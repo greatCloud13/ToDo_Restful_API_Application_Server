@@ -10,10 +10,21 @@ Spring Boot ToDo 관리 API
 ## Dev env
 - __JDK__ : 21
 - __Framework__ : SpringBoot 3.4.6
-- __DB__ : PostgreSQL
+- __DB__ : MySQL 8.0
 - __Build Tool__ : Gradle
 
+## CI/CD
+### 배포 환경
+- __Production Server__ : AWS EC2 (Ubuntu 22.04)
+- __Database__ : MySQL 8.0(Dockercontainer)
+- __Containerization__ : Docker
+- __Orchestration__ : Docker Compose
 ---
+
+### 접근 URL
+- __API Server__ : http://3.39.233.173:8080
+- __Swagger UI__ : http://3.39.233.173:8080/swagger-ui/index.html
+ ❗ EC2 컨테이너를 주기적으로 재부팅중이므로 경로가 계속해서 변경됩니다.
 
 # 기본 정보
 

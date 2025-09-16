@@ -86,7 +86,6 @@ jobs:
             
             # docker-compose.yml 파일 생성
             cat > docker-compose.yml << 'EOF'
-            version: '3.8'
             services:
               app:
                 image: ${{ secrets.DOCKER_USERNAME }}/spring-boot-app:latest
@@ -116,12 +115,12 @@ jobs:
             EOF
             
             # 새 이미지 다운로드 및 실행
-            sudo /usr/local/bin/docker-compose pull app
-            sudo /usr/local/bin/docker-compose up -d
+            sudo docker compose pull app
+            sudo docker compose up -d
             
             # 배포 상태 확인
             sleep 15
-            sudo /usr/local/bin/docker-compose ps
+            sudo docker compose ps
             
 
       # LEV 9. 테스트 결과 저장 (디버깅용)

@@ -4,18 +4,15 @@ import com.example.webapp.DTO.ToDoResponseDTO;
 import com.example.webapp.DTO.TodoStats;
 import com.example.webapp.entity.ToDo;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.ToDoubleFunction;
 
 @RestController
 @RequestMapping("/dashboard")

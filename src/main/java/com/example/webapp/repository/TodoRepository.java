@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +28,14 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      */
     @Query("SELECT t FROM ToDo t JOIN FETCH t.user WHERE t.user = :user")
     Page<ToDo> findByUser(@Param("user")User user, Pageable pageable);
+
+    /**
+     * 시작일자와 종료 예정일자를 기준으로 조회
+     * @param startDate 조회 시작일자
+     * @param endDate 조회 종료일자
+     * @return 할 일 리스트
+     */
+    List<ToDo> findByUserAndPlanningDateBetween(User user, LocalDateTime startDate, LocalDateTime endDate);
+
 
 }

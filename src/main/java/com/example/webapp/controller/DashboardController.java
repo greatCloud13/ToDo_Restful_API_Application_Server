@@ -59,57 +59,9 @@ public class DashboardController {
     @GetMapping("/urgent")
     public ResponseEntity<List<ToDoResponseDTO>> todoUrgent(){
 
-        List<ToDoResponseDTO> urgentTasks = Arrays.asList(
-                ToDoResponseDTO.builder()
-                        .id(4)
-                        .title("고객 미팅 준비")
-                        .memo("발표 자료 최종 검토 및 인쇄")
-                        .taskPriority(ToDo.TaskPriority.VERY_HIGH)
-                        .category("업무")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusHours(4))
-                        .createdAt(LocalDateTime.now().minusHours(1))
-                        .username("greatcloud13")
-                        .build(),
+        List<ToDoResponseDTO> urgentList = dashBoardService.findCriticalToDoList();
 
-                ToDoResponseDTO.builder()
-                        .id(5)
-                        .title("세금 신고서 제출")
-                        .memo("마감일 내일까지, 필수 서류 첨부")
-                        .taskPriority(ToDo.TaskPriority.VERY_HIGH)
-                        .category("행정")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusDays(1))
-                        .createdAt(LocalDateTime.now().minusHours(3))
-                        .username("greatcloud13")
-                        .build(),
-
-                ToDoResponseDTO.builder()
-                        .id(6)
-                        .title("의료진 예약 확인")
-                        .memo("내과 검진 예약 시간 재확인 필요")
-                        .taskPriority(ToDo.TaskPriority.VERY_HIGH)
-                        .category("건강")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusHours(6))
-                        .createdAt(LocalDateTime.now().minusHours(2))
-                        .username("greatcloud13")
-                        .build(),
-
-                ToDoResponseDTO.builder()
-                        .id(7)
-                        .title("긴급 버그 수정")
-                        .memo("프로덕션 환경 critical 이슈 해결")
-                        .taskPriority(ToDo.TaskPriority.VERY_HIGH)
-                        .category("업무")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusHours(2))
-                        .createdAt(LocalDateTime.now().minusMinutes(30))
-                        .username("greatcloud13")
-                        .build()
-        );
-
-        return ResponseEntity.ok(urgentTasks);
+        return ResponseEntity.ok(urgentList);
 
     }
 

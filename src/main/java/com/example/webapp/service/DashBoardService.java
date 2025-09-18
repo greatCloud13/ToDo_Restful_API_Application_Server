@@ -13,5 +13,10 @@ public interface DashBoardService {
      */
     List<ToDoResponseDTO> findTodayToDoList();
 
+    /**
+     * 매우 중요한 할 일 리스트 제공
+     * @return 매우 중요한 할 일 리스트
+     */
+    List<ToDoResponseDTO> findCriticalToDoList();
 
 }

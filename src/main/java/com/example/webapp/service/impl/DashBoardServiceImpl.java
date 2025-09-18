@@ -6,6 +6,7 @@ import com.example.webapp.entity.ToDo;
 import com.example.webapp.entity.User;
 import com.example.webapp.repository.TodoRepository;
 import com.example.webapp.service.DashBoardService;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -32,7 +33,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     public List<ToDoResponseDTO> findTodayToDoList() {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("금일 종료 예정 ToList 조회 사용자명: {}",username);
+        log.info("금일 종료 예정 TodoList 조회 사용자명: {}",username);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()-> new AuthorizationDeniedException(
@@ -52,4 +53,28 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .map(ToDoResponseDTO :: from)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public List<ToDoResponseDTO>findCriticalToDoList(){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("매우 급한 ToList 조회 사용자명: {}",username);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new AuthorizationDeniedException(
+                        "사용자를 찾을 수 없습니다."
+                ));
+
+
+        return (List<ToDoResponseDTO>) todoRepository.findByUserAndTaskPriority(user, ToDo.TaskPriority.VERY_HIGH)
+                .stream()
+                .map(ToDoResponseDTO :: from)
+                .toList();
+
+
+    }
+
+
+
 }

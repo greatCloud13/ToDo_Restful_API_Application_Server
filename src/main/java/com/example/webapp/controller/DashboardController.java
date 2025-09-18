@@ -3,6 +3,7 @@ package com.example.webapp.controller;
 import com.example.webapp.DTO.ToDoResponseDTO;
 import com.example.webapp.DTO.TodoStats;
 import com.example.webapp.entity.ToDo;
+import com.example.webapp.service.DashBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import java.util.List;
 @RequestMapping("/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
+
+    private final DashBoardService dashBoardService;
 
 
     @Operation(
@@ -35,44 +38,8 @@ public class DashboardController {
     @GetMapping("/today")
     public ResponseEntity<List<ToDoResponseDTO>> todayTodo(){
 
-        List<ToDoResponseDTO> result = Arrays.asList(
-                ToDoResponseDTO.builder()
-                        .id(1)
-                        .title("마트 다녀오기")
-                        .memo("돼지고기 500g 구매")
-                        .taskPriority(ToDo.TaskPriority.HIGH)
-                        .category("생활")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusDays(1))
-                        .createdAt(LocalDateTime.now().minusDays(1))
-                        .username("greatcloud13")
-                        .build(),
+        List<ToDoResponseDTO> result = dashBoardService.findTodayToDoList();
 
-                ToDoResponseDTO.builder()
-                        .id(2)
-                        .title("프로젝트 완료하기")
-                        .memo("테스트 코드 작성 포함")
-                        .taskPriority(ToDo.TaskPriority.VERY_HIGH)
-                        .category("업무")
-                        .taskStatus(ToDo.TaskStatus.IN_PROGRESS)
-                        .planningDate(LocalDateTime.now().plusDays(3))
-                        .createdAt(LocalDateTime.now().minusDays(2))
-                        .username("greatcloud13")
-                        .build(),
-
-                ToDoResponseDTO.builder()
-                        .id(3)
-                        .title("운동하기")
-                        .memo("헬스장 1시간")
-                        .taskPriority(ToDo.TaskPriority.MIDDLE)
-                        .category("건강")
-                        .taskStatus(ToDo.TaskStatus.COMPLETE)
-                        .planningDate(LocalDateTime.now().minusDays(1))
-                        .doneAt(LocalDateTime.now().minusHours(2))
-                        .createdAt(LocalDateTime.now().minusDays(3))
-                        .username("greatcloud13")
-                        .build()
-        );
         return ResponseEntity.ok(result);
     }
 

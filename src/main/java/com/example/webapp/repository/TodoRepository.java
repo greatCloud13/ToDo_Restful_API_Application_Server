@@ -37,5 +37,12 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      */
     List<ToDo> findByUserAndPlanningDateBetween(User user, LocalDateTime startDate, LocalDateTime endDate);
 
+    /**
+     * 우선순위를 선택하여 조회
+     * @param taskPriority 우선순위
+     * @return 할 일 리스트
+     */
+    List<ToDo> findByUserAndTaskPriority(User user, ToDo.TaskPriority taskPriority);
+
 
 }

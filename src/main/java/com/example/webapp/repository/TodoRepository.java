@@ -44,5 +44,18 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      */
     List<ToDo> findByUserAndTaskPriority(User user, ToDo.TaskPriority taskPriority);
 
+    /**
+     * 요청한 상태에 해당하는 할 일의 갯수를 조회합니다
+     * @param taskStatus 할 일 상태
+     * @return 해당 상태의 할 일 갯수
+     */
+    Long countByUserAndStatus(User user, ToDo.TaskStatus taskStatus);
+
+    /**
+     * 요청한 유저의 할 일을 상태를 조회합니다.
+     * @param user 사용자 객체
+     * @return 해당 사용자의 할 일 갯수
+     */
+    Long countByUser(User user);
 
 }

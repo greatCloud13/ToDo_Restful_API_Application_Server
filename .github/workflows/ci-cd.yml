@@ -3,8 +3,8 @@ name: Todo web application API prj CI/CD with Docker
 #언제 실행하는지 설정 (트리거 설정)
 on:
   push:
-    branches: [main, develop]
-   # 운영 개발 브랜치는 핵심이기에 항상 검증 시행
+    branches: [develop]
+   # 개발 브랜치는 핵심이기에 항상 검증 시행
   pull_request:
     branches: [main]
     # main으로 들어오는 모든 PR은 반드시 검증 후 merge

@@ -2,6 +2,9 @@ package com.example.webapp.service.impl;
 
 import com.example.jwt.Repository.UserRepository;
 import com.example.webapp.DTO.ToDoResponseDTO;
+import com.example.webapp.DTO.TodoStats;
+import com.example.webapp.common.annotations.InjectUserEntity;
+import com.example.webapp.common.context.UserContext;
 import com.example.webapp.entity.ToDo;
 import com.example.webapp.entity.User;
 import com.example.webapp.repository.TodoRepository;
@@ -75,6 +78,40 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     }
 
+    @Override
+    @InjectUserEntity
+    @Transactional(readOnly = true)
+    public TodoStats  getTaskStatus() {
+
+        User user = UserContext.getCurrentUser();
+        TodoStats stats = new TodoStats();
+
+        long total = todoRepository.countByUser(user);
+        log.info("사용자: {} 전체 ToDo 갯수 조회: {}", user.getUsername(), total);
+
+        long completed = todoRepository.countByUserAndStatus(user, ToDo.TaskStatus.COMPLETE);
+        log.info("사용자: {} 완료된 ToDo 갯수 조회: {}", user.getUsername(), completed);
+
+        long inProgress = todoRepository.countByUserAndStatus(user, ToDo.TaskStatus.IN_PROGRESS);
+        log.info("사용자: {} 진행중 ToDo 갯수 조회: {}", user.getUsername(), inProgress);
+
+        long pending = todoRepository.countByUserAndStatus(user, ToDo.TaskStatus.ON_HOLD);
+        log.info("사용자: {} 보류중 ToDo 갯수 조회: {}", user.getUsername(), pending);
+
+        long completeRate = 0;
+        if(total > 0){
+            completeRate = Math.round((double) completed * 100 / total);
+        }
+
+
+        stats.setTotal(total);
+        stats.setCompleted(completed);
+        stats.setInprogress(inProgress);
+        stats.setPending(pending);
+        stats.setCompletionRate(completeRate);
+
+        return stats;
+    }
 
 
 }

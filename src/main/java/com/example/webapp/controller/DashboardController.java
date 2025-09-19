@@ -81,13 +81,7 @@ public class DashboardController {
     @GetMapping("/stats")
     public ResponseEntity<TodoStats> todoStats(){
 
-        TodoStats result = TodoStats.builder()
-                .total(5)
-                .completed(4)
-                .completionRate(40)
-                .inprogress(1)
-                .pending(2)
-                .build();
+        TodoStats result = dashBoardService.getTaskStatus();
 
         return ResponseEntity.ok(result);
 

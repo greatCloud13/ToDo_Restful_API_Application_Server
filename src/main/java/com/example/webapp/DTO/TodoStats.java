@@ -16,17 +16,17 @@ import lombok.RequiredArgsConstructor;
 public class TodoStats {
 
     @Schema(description = "전체 할 일")
-    private int total;
+    private long total;
 
     @Schema(description = "완료된 할 일")
-    private int completed;
+    private long completed;
 
     @Schema(description = "진행중인 할 일")
-    private int inprogress;
+    private long inprogress;
 
     @Schema(description = "보류 중")
-    private int pending;
+    private long pending;
 
     @Schema(description = "진행률")
-    private int completionRate;
+    private long completionRate;
 }

@@ -34,6 +34,8 @@ public class UserEntityInjectionAspect {
 
             UserContext.setCurrentUser(user);
 
+            return joinPoint.proceed();
+
         }finally {
             UserContext.clear();
         }

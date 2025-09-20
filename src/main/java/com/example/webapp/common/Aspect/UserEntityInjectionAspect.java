@@ -21,8 +21,11 @@ public class UserEntityInjectionAspect {
 
     private final UserRepository userRepository;
 
-    @Around("@annotation(InjectUserEntity)")
+    @Around("@annotation(com.example.webapp.common.annotations.InjectUserEntity)")
     public Object injectUserEntity(ProceedingJoinPoint joinPoint) throws Throwable{
+
+        System.out.println("============ ASPECT 실행됨! ============");
+
         try {
 
             String username = SecurityContextHolder.getContext().getAuthentication().getName();

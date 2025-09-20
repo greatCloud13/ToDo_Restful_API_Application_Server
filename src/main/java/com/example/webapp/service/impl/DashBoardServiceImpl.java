@@ -70,8 +70,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                         "사용자를 찾을 수 없습니다."
                 ));
 
-
-        return (List<ToDoResponseDTO>) todoRepository.findByUserAndTaskPriority(user, ToDo.TaskPriority.VERY_HIGH)
+        return todoRepository.findByUserAndTaskPriorityAndStatus(user, ToDo.TaskPriority.VERY_HIGH, ToDo.TaskStatus.IN_PROGRESS)
                 .stream()
                 .map(ToDoResponseDTO :: from)
                 .toList();

@@ -58,4 +58,12 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      */
     Long countByUser(User user);
 
+    /**
+     * 요청한 유저의 특정 기간 이전 할 일을 조회합니다
+     * @param user 사용자 객체
+     * @param planningDate 특정 날짜
+     * @return 선택한 날짜 이전의 할 일
+     */
+    List<ToDo> findByUserAndPlanningDateBefore(User user, LocalDateTime planningDate);
+
 }

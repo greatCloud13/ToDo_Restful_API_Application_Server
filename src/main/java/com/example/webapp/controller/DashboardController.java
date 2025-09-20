@@ -6,12 +6,14 @@ import com.example.webapp.entity.ToDo;
 import com.example.webapp.service.DashBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,6 +87,27 @@ public class DashboardController {
 
         return ResponseEntity.ok(result);
 
+    }
+
+
+    @Operation(
+            summary = "기한이 지난 할 일 리스트 조회",
+            description = """
+                    ## 기한이 지난 할 일 조회 API
+                    마감 기한이 지난 할 일 리스트를 요청합니다
+                    - 개발일자:
+                    - 수정일자: .
+                    - 테스트 여부:
+
+                    ### 필수 입력 항목
+                    """
+    )
+    @GetMapping("/overdue")
+    public ResponseEntity<List<ToDoResponseDTO>> overdueTodos(){
+
+        List<ToDoResponseDTO> result = dashBoardService.findOverdueToDoList();
+
+        return ResponseEntity.ok(result);
     }
 
 }

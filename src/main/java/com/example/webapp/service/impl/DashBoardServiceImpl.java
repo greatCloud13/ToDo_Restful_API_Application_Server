@@ -63,9 +63,8 @@ public class DashBoardServiceImpl implements DashBoardService {
     @InjectUserEntity
     public List<ToDoResponseDTO>findCriticalToDoList()
     {
-        log.info("매우 급한 ToList 조회 사용자명: {}",username);
-
         User user = UserContext.getCurrentUser();
+        log.info("매우 급한 ToList 조회 사용자명: {}", user.getUsername());
 
         return todoRepository.findByUserAndTaskPriorityAndStatus(user, ToDo.TaskPriority.VERY_HIGH, ToDo.TaskStatus.IN_PROGRESS)
                 .stream()

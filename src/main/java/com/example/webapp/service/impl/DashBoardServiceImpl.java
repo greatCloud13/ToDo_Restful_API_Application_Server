@@ -12,6 +12,7 @@ import com.example.webapp.service.DashBoardService;
 import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,19 @@ public class DashBoardServiceImpl implements DashBoardService {
         stats.setCompletionRate(completeRate);
 
         return stats;
+    }
+
+    @Override
+    @InjectUserEntity
+    @Transactional
+    public List<ToDoResponseDTO> findOverdueToDoList() {
+
+        User user = UserContext.getCurrentUser();
+        LocalDateTime now = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
+
+        List<ToDo> result = todoRepository.findByUserAndPlanningDateBefore(user, now);
+
+        return result.stream().map(ToDoResponseDTO :: from).toList();
     }
 
 

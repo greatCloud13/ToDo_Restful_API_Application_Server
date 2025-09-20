@@ -25,4 +25,6 @@ public interface DashBoardService {
      * @return 해당 상태의 할 일 갯수
      */
     TodoStats getTaskStatus();
+
+    List<ToDoResponseDTO> findOverdueToDoList();
 }

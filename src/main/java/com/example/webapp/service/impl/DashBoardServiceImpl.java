@@ -60,15 +60,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     @Override
     @Transactional
-    public List<ToDoResponseDTO>findCriticalToDoList(){
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    @InjectUserEntity
+    public List<ToDoResponseDTO>findCriticalToDoList()
+    {
         log.info("매우 급한 ToList 조회 사용자명: {}",username);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()-> new AuthorizationDeniedException(
-                        "사용자를 찾을 수 없습니다."
-                ));
+        User user = UserContext.getCurrentUser();
 
         return todoRepository.findByUserAndTaskPriorityAndStatus(user, ToDo.TaskPriority.VERY_HIGH, ToDo.TaskStatus.IN_PROGRESS)
                 .stream()

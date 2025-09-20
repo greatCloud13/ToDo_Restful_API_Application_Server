@@ -38,11 +38,11 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
     List<ToDo> findByUserAndPlanningDateBetween(User user, LocalDateTime startDate, LocalDateTime endDate);
 
     /**
-     * 우선순위를 선택하여 조회
+     * 우선 순위 및 상태를 기준으로 조회
      * @param taskPriority 우선순위
      * @return 할 일 리스트
      */
-    List<ToDo> findByUserAndTaskPriority(User user, ToDo.TaskPriority taskPriority);
+    List<ToDo> findByUserAndTaskPriorityAndStatus(User user, ToDo.TaskPriority taskPriority, ToDo.TaskStatus status);
 
     /**
      * 요청한 상태에 해당하는 할 일의 갯수를 조회합니다

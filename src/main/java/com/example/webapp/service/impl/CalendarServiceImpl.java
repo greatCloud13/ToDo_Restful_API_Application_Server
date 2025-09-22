@@ -27,16 +27,11 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     @InjectUserEntity
     @Transactional(readOnly = true)
-    public List<ToDoResponseDTO> getThisMonthTodo() {
+    public List<ToDoResponseDTO> getThisMonthTodo(LocalDate startDate, LocalDate lastDate) {
 
         User user = UserContext.getCurrentUser();
 
-        LocalDate now = LocalDate.now();
-
-        LocalDateTime startDate = now.withDayOfMonth(1).atTime(LocalTime.MIN);
-        LocalDateTime lastDate = now.withDayOfMonth(now.lengthOfMonth()).atTime(LocalTime.MAX);
-
-        List<ToDo> result = todoRepository.findByUserAndPlanningDateBetween(user, startDate, lastDate);
+        List<ToDo> result = todoRepository.findByUserAndPlanningDateBetween(user, startDate.atTime(LocalTime.MIN), lastDate.atTime(LocalTime.MAX));
 
         return result.stream().map(ToDoResponseDTO :: from).toList();
     }

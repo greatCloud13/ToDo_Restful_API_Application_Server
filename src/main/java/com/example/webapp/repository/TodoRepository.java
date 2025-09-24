@@ -67,4 +67,39 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      */
     List<ToDo> findByUserAndPlanningDateBefore(User user, LocalDateTime planningDate);
 
+    /**
+     * 시작일자와 종료일자 에정일자를 기준으로 할 일 갯수 조회
+     * @param user 사용자 객체
+     * @param startDate 시작일
+     * @param endDate 종료일
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndPlanningDateBetween(User user, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * 선택한 날짜보다 일정이 지연된 할 일 갯수 조회
+     * @param date 선택 일자
+     * @param userId 사용자 고유 ID
+     * @return 조건에 맞는 할 일 갯수
+     */
+    @Query("SELECT COUNT(t) FROM ToDo t WHERE t.planningDate > :selectedDate AND t.user.id = :userId")
+    long countTodosAfterPlanningDate(@Param("selectedDate") LocalDateTime date, @Param("userId") Long userId);
+
+    /**
+     * 선택한 중요도에 해당하는 할 일의 갯수를 조회
+     * @param user 사용자 객체
+     * @param priority 중요도
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndTaskPriority(User user, ToDo.TaskPriority priority);
+
+    /**
+     * 선택한 날짜 이후의 생성된 할 일의 갯수를 조회
+     * @param userId 사용자 고유 ID
+     * @param startDate 검색일자
+     * @return 조건에 맞는 할 일 갯수
+     */
+    @Query("SELECT COUNT(DISTINCT DATE(t.createdAt)) FROM ToDo t WHERE t.user.id = :userId AND t.createdAt >= :startDate")
+    long countActiveDays(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate);
+    
 }

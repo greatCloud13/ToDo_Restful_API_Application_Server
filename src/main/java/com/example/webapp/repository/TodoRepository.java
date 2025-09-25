@@ -50,14 +50,31 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      * @param taskStatus 할 일 상태
      * @return 해당 상태의 할 일 갯수
      */
-    Long countByUserAndStatus(User user, ToDo.TaskStatus taskStatus);
+    long countByUserAndStatus(User user, ToDo.TaskStatus taskStatus);
 
     /**
      * 요청한 유저의 할 일을 상태를 조회합니다.
      * @param user 사용자 객체
      * @return 해당 사용자의 할 일 갯수
      */
-    Long countByUser(User user);
+    long countByUser(User user);
+
+    /**
+     * 선택한 일자 이전까지의 전체 할 일 갯수를 조회
+     * @param user 사용자 객체
+     * @param targetDate 조회 기준
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndCreatedAtBefore(User user, LocalDateTime targetDate);
+
+    /**
+     * 선택한 일자, 선택한 상태에 해당하는 할 일의 갯수를 조회
+     * @param user 사용자 객체
+     * @param targetDate 기준 일자
+     * @param status 상태
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndCreatedAtBeforeAndStatus(User user, LocalDateTime targetDate, ToDo.TaskStatus status);
 
     /**
      * 요청한 유저의 특정 기간 이전 할 일을 조회합니다
@@ -94,12 +111,32 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
     long countByUserAndTaskPriority(User user, ToDo.TaskPriority priority);
 
     /**
-     * 선택한 날짜 이후의 생성된 할 일의 갯수를 조회
+     * 할 일이 생성된 날짜의 갯수를 조회
      * @param userId 사용자 고유 ID
      * @param startDate 검색일자
-     * @return 조건에 맞는 할 일 갯수
+     * @return 할 일이 생성된 일자 수
      */
     @Query("SELECT COUNT(DISTINCT DATE(t.createdAt)) FROM ToDo t WHERE t.user.id = :userId AND t.createdAt >= :startDate")
     long countActiveDays(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate);
-    
+
+    /**
+     * 선택한 일자에 생성된 할 일의 갯수를 조회
+     * @param user 사용자 객체
+     * @param startDate 조회 시작일
+     * @param endDate 조회 종료일
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndCreatedAtBetween(User user, LocalDateTime startDate, LocalDateTime endDate);
+
+    /**
+     * 선택한 일자와 상태에 따른 할 일 갯수를 조회
+     * @param user 사용자 객체
+     * @param startDate 조회 시작일
+     * @param endDate 조회 종료일
+     * @param status 상태
+     * @return 조건에 맞는 할 일 갯수
+     */
+    long countByUserAndCreatedAtBetweenAndStatus(User user, LocalDateTime startDate, LocalDateTime endDate, ToDo.TaskStatus status);
+
+
 }

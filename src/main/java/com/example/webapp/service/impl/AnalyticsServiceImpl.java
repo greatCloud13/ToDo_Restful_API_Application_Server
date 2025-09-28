@@ -1,7 +1,6 @@
 package com.example.webapp.service.impl;
 
-import com.example.webapp.DTO.AnalyticsTrendDTO;
-import com.example.webapp.DTO.SummaryDTO;
+import com.example.webapp.DTO.*;
 import com.example.webapp.DTO.request.AnalyticsTrendRequestDTO;
 import com.example.webapp.DTO.request.SummaryRequestDTO;
 import com.example.webapp.common.annotations.InjectUserEntity;
@@ -50,7 +49,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         result.setCompleted(completed);
         result.setPending(pending);
         result.setInProgress(inProgress);
-        result.setCompletionRate(completed * 100 / completed);
+        if(completed!=0){
+            result.setCompletionRate(completed * 100 / completed);
+        }else{
+            result.setCompletionRate(0);
+        }
         result.setOverdueCount(todoRepository.countTodosAfterPlanningDate(LocalDateTime.now(), user.getId()));
         result.setUrgentCount(todoRepository.countByUserAndTaskPriority(user, ToDo.TaskPriority.VERY_HIGH));
         result.setActiveDays(todoRepository.countActiveDays(user.getId(), LocalDateTime.now()));
@@ -81,16 +84,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             LocalDateTime startDate = targetDate.atTime(LocalTime.MIN);
             LocalDateTime endDate = targetDate.atTime(LocalTime.MAX);
 
-            total = todoRepository.countByUserAndCreatedAtBefore(user, targetDate.atTime(LocalTime.MAX));
+            total = todoRepository.countByUserAndPlanningDateBefore(user, targetDate.atTime(LocalTime.MAX));
             log.info("조회 일자까지의 총 할 일 갯수: {}", total);
 
-            completed = todoRepository.countByUserAndCreatedAtBeforeAndStatus(user, targetDate.atTime(LocalTime.MAX), ToDo.TaskStatus.COMPLETE);
+            completed = todoRepository.countByUserAndPlanningDateBeforeAndStatus(user, targetDate.atTime(LocalTime.MAX), ToDo.TaskStatus.COMPLETE);
             log.info("조회 일자까지 완료한 할 일 갯수: {}", completed);
 
             trend.setDate(targetDate);
             trend.setCompleted(completed);
             trend.setTotal(total);
-            trend.setCompletionRate(completed*100/total);
+            if(completed!=0) {
+                trend.setCompletionRate(completed * 100 / total);
+            }else{
+                trend.setCompletionRate(0);
+            }
+
             trend.setCreated(todoRepository.countByUserAndCreatedAtBetween(user, startDate, endDate));
 
             result.add(trend);
@@ -98,5 +106,22 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
 
         return result;
+    }
+
+    @InjectUserEntity
+    @Transactional(readOnly = true)
+    @Override
+    public AnalyticsDistributionDTO getDistribution(String period) {
+
+        User user = UserContext.getCurrentUser();
+
+        LocalDate now = LocalDate.now();
+        LocalDateTime startDate = now.minusDays(6).atTime(LocalTime.MIN);
+
+        List<PriorityDistribution> priorityResult = todoRepository.countByUserAndTaskPriorityDistribution(user.getId(), startDate);
+        List<CategoryDistribution> categoryResult = todoRepository.countByUserAndCategoryAndTask(user.getId(), startDate);
+
+
+        return new AnalyticsDistributionDTO(categoryResult, priorityResult);
     }
 }

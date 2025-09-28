@@ -2,6 +2,7 @@ package com.example.webapp.DTO;
 
 
 import com.example.webapp.entity.ToDo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class CategoryDistribution {
 
     /**

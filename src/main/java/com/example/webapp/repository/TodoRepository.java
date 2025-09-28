@@ -65,7 +65,7 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      * @param targetDate 조회 기준
      * @return 조건에 맞는 할 일 갯수
      */
-    long countByUserAndCreatedAtBefore(User user, LocalDateTime targetDate);
+    long countByUserAndPlanningDateBefore(User user, LocalDateTime targetDate);
 
     /**
      * 선택한 일자, 선택한 상태에 해당하는 할 일의 갯수를 조회
@@ -74,7 +74,7 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      * @param status 상태
      * @return 조건에 맞는 할 일 갯수
      */
-    long countByUserAndCreatedAtBeforeAndStatus(User user, LocalDateTime targetDate, ToDo.TaskStatus status);
+    long countByUserAndPlanningDateBeforeAndStatus(User user, LocalDateTime targetDate, ToDo.TaskStatus status);
 
     /**
      * 요청한 유저의 특정 기간 이전 할 일을 조회합니다

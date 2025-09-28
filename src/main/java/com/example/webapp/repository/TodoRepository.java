@@ -1,5 +1,8 @@
 package com.example.webapp.repository;
 
+import com.example.webapp.DTO.AnalyticsDistributionDTO;
+import com.example.webapp.DTO.CategoryDistribution;
+import com.example.webapp.DTO.PriorityDistribution;
 import com.example.webapp.entity.ToDo;
 import com.example.webapp.entity.User;
 import org.springframework.data.domain.Page;
@@ -137,6 +140,34 @@ public interface TodoRepository extends JpaRepository<ToDo, Long> {
      * @return 조건에 맞는 할 일 갯수
      */
     long countByUserAndCreatedAtBetweenAndStatus(User user, LocalDateTime startDate, LocalDateTime endDate, ToDo.TaskStatus status);
+
+    /**
+     * 선택한 일자부터 현재 일자까지의 우선순위별 분포 정보를 조회
+     * @param userId 사용자 고유 ID
+     * @param startDate 조회 시작 일자
+     * @return Priority 객체 리스트
+     */
+    @Query("SELECT new com.example.webapp.DTO.PriorityDistribution(t.taskPriority, COUNT(t)) " +
+            "FROM ToDo t " +
+            "WHERE t.user.id = :userId AND t.createdAt >= :startDate " +
+            "GROUP BY t.taskPriority")
+    List<PriorityDistribution> countByUserAndTaskPriorityDistribution(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate);
+
+    /**
+     *  선택한 일자부터 현재 일자까지의 카테고리별 진행 상황을 조회
+     * @param userId 사용자 고유 ID
+     * @param startDate 조회 시작일자
+     * @return CategoryDistribution 객체 리스트
+     */
+    @Query("SELECT new com.example.webapp.DTO.CategoryDistribution(t.category, " +
+            "COUNT(CASE WHEN t.status = 'COMPLETE' THEN 1 ELSE null END), " +
+            "COUNT(CASE WHEN t.status = 'IN_PROGRESS' THEN 1 ELSE null END), " +
+            "COUNT(CASE WHEN t.status = 'ON_HOLD' THEN 1 ELSE null END)," +
+            "0L) " +
+            "FROM ToDo t " +
+            "WHERE t.user.id = :userId AND t.createdAt >= :startDate " +
+            "GROUP BY t.category")
+    List<CategoryDistribution> countByUserAndCategoryAndTask(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate);
 
 
 }

@@ -76,7 +76,7 @@ public class AnalyticsController {
     @GetMapping("/distribution")
     public ResponseEntity<AnalyticsDistributionDTO> distribution(@RequestParam("period") String trendPeriod){
 
-        AnalyticsDistributionDTO result = new AnalyticsDistributionDTO();
+        AnalyticsDistributionDTO result = analyticsService.getDistribution(trendPeriod);
 
         return ResponseEntity.ok(result);
     }

@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -90,6 +91,16 @@ public class ToDoServiceImpl implements ToDoService {
                 );
 
         todo.setStatus(status);
+
+        if(status.equals(ToDo.TaskStatus.COMPLETE)){
+            todo.setDoneAt(LocalDateTime.now());
+        }
+        if(status.equals(ToDo.TaskStatus.IN_PROGRESS)){
+            todo.setDoneAt(null);
+        }
+        if(status.equals(ToDo.TaskStatus.ON_HOLD)){
+            todo.setDoneAt(null);
+        }
 
         ToDo result = todoRepository.save(todo);
 

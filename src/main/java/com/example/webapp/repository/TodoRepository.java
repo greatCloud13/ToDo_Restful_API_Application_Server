@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface TodoRepository extends JpaRepository<ToDo, Long> {
+public interface TodoRepository extends JpaRepository<ToDo, Long>, ToDoInsightRepository {
 
     /**
      * ID를 통해 할 일 조회

@@ -2,6 +2,7 @@ package com.example.webapp.controller;
 
 import com.example.webapp.DTO.AnalyticsDistributionDTO;
 import com.example.webapp.DTO.AnalyticsTrendDTO;
+import com.example.webapp.DTO.InsightDTO;
 import com.example.webapp.DTO.SummaryDTO;
 import com.example.webapp.DTO.request.AnalyticsTrendRequestDTO;
 import com.example.webapp.DTO.request.SummaryRequestDTO;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -81,6 +83,24 @@ public class AnalyticsController {
         return ResponseEntity.ok(result);
     }
 
+    @Operation(
+            summary = " 인사이트 요청 API",
+            description = """
+                    ## 인사이트 요청 API
+                    인사이트 데이터를 요청합니다.
+                    - 개발일자:
+                    - 수정일자: .
+                    - 테스트 여부:
 
+                    ### 필수 입력 항목
+                    """
+    )
+    @GetMapping("/insight")
+    public ResponseEntity<List<InsightDTO>> insight(){
+
+        List<InsightDTO> result = analyticsService.getInsight();
+
+        return ResponseEntity.ok(result);
+    }
 
 }

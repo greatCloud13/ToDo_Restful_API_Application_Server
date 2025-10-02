@@ -2,6 +2,7 @@ package com.example.webapp.service;
 
 import com.example.webapp.DTO.AnalyticsDistributionDTO;
 import com.example.webapp.DTO.AnalyticsTrendDTO;
+import com.example.webapp.DTO.InsightDTO;
 import com.example.webapp.DTO.SummaryDTO;
 import com.example.webapp.DTO.request.AnalyticsTrendRequestDTO;
 import com.example.webapp.DTO.request.SummaryRequestDTO;
@@ -15,4 +16,6 @@ public interface AnalyticsService {
     List<AnalyticsTrendDTO> getWeekTrend(String trendPeriod);
 
     AnalyticsDistributionDTO getDistribution(String period);
-    }
+
+    List<InsightDTO> getInsight();
+}

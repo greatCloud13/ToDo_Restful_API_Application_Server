@@ -2,12 +2,14 @@ package com.example.webapp.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 인사이트 Response DTO
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class InsightDTO {
 
     /**

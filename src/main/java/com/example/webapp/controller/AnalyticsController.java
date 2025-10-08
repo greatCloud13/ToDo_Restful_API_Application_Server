@@ -83,6 +83,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(result);
     }
 
+    /*
     @Operation(
             summary = " 인사이트 요청 API",
             description = """
@@ -95,12 +96,13 @@ public class AnalyticsController {
                     ### 필수 입력 항목
                     """
     )
-    @GetMapping("/insight")
-    public ResponseEntity<List<InsightDTO>> insight(){
+    @GetMapping("/insights")
+    public ResponseEntity<List<InsightDTO>> insight(@RequestParam("period") String period){
 
         List<InsightDTO> result = analyticsService.getInsight();
 
         return ResponseEntity.ok(result);
     }
+     */
 
 }

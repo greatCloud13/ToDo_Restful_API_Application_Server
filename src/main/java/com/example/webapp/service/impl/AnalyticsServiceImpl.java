@@ -1,7 +1,6 @@
 package com.example.webapp.service.impl;
 
 import com.example.webapp.DTO.*;
-import com.example.webapp.DTO.request.AnalyticsTrendRequestDTO;
 import com.example.webapp.DTO.request.SummaryRequestDTO;
 import com.example.webapp.common.annotations.InjectUserEntity;
 import com.example.webapp.common.context.UserContext;
@@ -33,11 +32,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         SummaryDTO result = new SummaryDTO();
         User user = UserContext.getCurrentUser();
-        SummaryRequestDTO.SummaryPeriod period = requestDTO.getPeriod();
-
-//        if(period.equals(SummaryRequestDTO.SummaryPeriod.MONTH)){
-//            request.LocalDateTime.now()
-//        }
 
         long total = todoRepository.countByUser(user);
         long completed = todoRepository.countByUserAndStatus(user, ToDo.TaskStatus.COMPLETE);
@@ -123,5 +117,33 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 
         return new AnalyticsDistributionDTO(categoryResult, priorityResult);
+    }
+
+    @InjectUserEntity
+    @Override
+    public List<InsightDTO> getInsight() {
+
+        List<InsightDTO> result = new ArrayList<>();
+        User user = UserContext.getCurrentUser();
+
+        BestProducibilityDateDTO bestProducibilityDateResult = todoRepository.getBestProducibilityDate(user);
+        InsightDTO bestProducibility = new InsightDTO(
+                "positive",
+                "최고 작업일",
+                bestProducibilityDateResult.getDate()+"에 가장 많은 작업을 완료했습니다. 완료율: "+bestProducibilityDateResult.getProgress()+"%"
+        );
+
+        List<WarnInsightDTO> warnInsight = todoRepository.getWarnInsight(user);
+
+        for(WarnInsightDTO insight : warnInsight){
+            result.add( new InsightDTO(
+                    "warn",
+                    "주의 필요",
+                    insight.getCategory()+"카테고리에서 "+insight.getCount()+"개의 지연된 할 일이 있습니다."));
+        }
+
+        result.add(bestProducibility);
+
+        return result;
     }
 }

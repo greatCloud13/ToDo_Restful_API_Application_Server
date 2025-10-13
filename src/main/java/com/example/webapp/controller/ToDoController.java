@@ -3,6 +3,7 @@ package com.example.webapp.controller;
 import com.example.jwt.util.SecurityUtils;
 import com.example.webapp.DTO.ToDoResponseDTO;
 import com.example.webapp.DTO.TodoRequestDTO;
+import com.example.webapp.DTO.request.BulkUpdateRequest;
 import com.example.webapp.entity.ToDo;
 import com.example.webapp.entity.User;
 import com.example.webapp.service.ToDoService;
@@ -166,4 +167,24 @@ public class ToDoController {
 
         return ResponseEntity.ok(result);
     }
+
+    @Operation(
+            summary = "ToDo 상태 일괄 변경",
+            description = """
+                ## ToDo 삭제 API
+                기존의 ToDo를 선택하여 삭제합니다.
+                - 개발일자: 2025-10-13
+                - 수정일자:
+                - 테스트 여부:
+                """
+    )
+    @PatchMapping("/bulkUpdate")
+    public ResponseEntity<List<ToDoResponseDTO>> bulkUpdateStatus(
+            @RequestBody BulkUpdateRequest request){
+
+        List<ToDoResponseDTO> result = toDoService.bulkUpdate(request);
+
+        return ResponseEntity.ok(result);
+    }
+
 }

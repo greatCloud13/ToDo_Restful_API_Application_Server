@@ -115,7 +115,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // 허용할 Origin (개발환경)
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",           // 로컬 개발
+                "http://13.124.204.209"            // 배포 환경
+        ));
 
         // 허용할 HTTP 메소드
         configuration.setAllowedMethods(Arrays.asList(

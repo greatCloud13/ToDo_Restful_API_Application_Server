@@ -131,17 +131,17 @@ public class ToDoController {
 
 
     @Operation(
-        summary = "ToDo 삭제",
-        description = """
-                ## ToDo 삭제 API
-                기존의 ToDo를 선택하여 삭제합니다.
-                - 개발일자:
-                - 수정일자:
-                - 테스트 여부:
-
-                ### 필수 입력 항목
-                - id : Integer
-                """
+            summary = "ToDo 삭제",
+            description = """
+                    ## ToDo 삭제 API
+                    기존의 ToDo를 선택하여 삭제합니다.
+                    - 개발일자:
+                    - 수정일자:
+                    - 테스트 여부:
+    
+                    ### 필수 입력 항목
+                    - id : Integer
+                    """
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
@@ -157,8 +157,10 @@ public class ToDoController {
             description = """
                     ## ToDo 완료 API
                     선택한 Todo의 상태를 변경합니다.
+                    - 개발일자:
+                    - 수정일자:
+                    - 테스트 여부:
                     """
-
     )
     @PostMapping("/status/{id}")
     public ResponseEntity<ToDo.TaskStatus> taskDone(@PathVariable Integer id, ToDo.TaskStatus status){
@@ -171,20 +173,36 @@ public class ToDoController {
     @Operation(
             summary = "ToDo 상태 일괄 변경",
             description = """
-                ## ToDo 삭제 API
-                기존의 ToDo를 선택하여 삭제합니다.
+                ## ToDo 상태 일괄 변경 API
+                기존의 ToDo의 상태를 일괄적으로 변경합니다.
                 - 개발일자: 2025-10-13
                 - 수정일자:
                 - 테스트 여부:
                 """
     )
     @PatchMapping("/bulkUpdate")
-    public ResponseEntity<List<ToDoResponseDTO>> bulkUpdateStatus(
-            @RequestBody BulkUpdateRequest request){
+    public ResponseEntity<List<ToDoResponseDTO>> bulkUpdateStatus(@RequestBody BulkUpdateRequest request){
 
         List<ToDoResponseDTO> result = toDoService.bulkUpdate(request);
 
         return ResponseEntity.ok(result);
     }
 
+
+    @Operation(
+            summary = "ToDo 일괄 삭제",
+            description = """
+                    ## ToDo 일괄 삭제 API
+                    요청한 ToDo를 일괄적으로 삭제합니다.
+                    - 개발일자:
+                    - 수정일자:
+                    """
+    )
+    @DeleteMapping("/bulkDelete")
+    public ResponseEntity<Boolean> bulkDelete(@RequestBody List<Long> request){
+
+        boolean result = toDoService.bulkDelete(request);
+
+        return ResponseEntity.ok(result);
+    }
 }

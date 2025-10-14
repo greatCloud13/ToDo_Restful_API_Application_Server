@@ -1,7 +1,11 @@
 package com.example.webapp.service.impl;
 
+import com.example.jwt.exception.InvalidJwtTokenException;
 import com.example.webapp.DTO.ToDoResponseDTO;
 import com.example.webapp.DTO.TodoRequestDTO;
+import com.example.webapp.DTO.request.BulkUpdateRequest;
+import com.example.webapp.common.annotations.InjectUserEntity;
+import com.example.webapp.common.context.UserContext;
 import com.example.webapp.entity.ToDo;
 import com.example.webapp.entity.User;
 import com.example.webapp.repository.TodoRepository;
@@ -16,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +33,7 @@ public class ToDoServiceImpl implements ToDoService {
     private final TodoRepository todoRepository;
 
     @Override
+    @Transactional
     public ToDoResponseDTO findTodoById(int id, String username) {
         log.info("할 일 조회 고유 id: {}",id);
 
@@ -132,4 +140,53 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
 
+    @Override
+    @InjectUserEntity
+    @Transactional
+    public List<ToDoResponseDTO> bulkUpdate(BulkUpdateRequest request) {
+
+        User user = UserContext.getCurrentUser();
+
+        List<ToDo> list = todoRepository.findAllById(request.getId());
+
+        if(list.size()!=request.getId().size()){
+            throw new EntityNotFoundException("일부 게시글을 찾을 수 없습니다.");
+        }
+
+        boolean hasUnauthorized = list.stream()
+                .anyMatch(toDo -> !toDo.getUser().equals(user));
+
+        if(hasUnauthorized)
+            throw new InvalidJwtTokenException("게시글의 접근 권한이 없습니다.");
+
+        list.forEach(toDo -> toDo.setStatus(request.getStatus()));
+
+        return list.stream()
+                .map(ToDoResponseDTO :: from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    @InjectUserEntity
+    public boolean bulkDelete(List<Long> request) {
+
+        User user = UserContext.getCurrentUser();
+
+        List<ToDo> list = todoRepository.findAllById(request);
+
+        if(request.size()!=list.size()){
+            throw new EntityNotFoundException("일부 게시글을 찾을 수 없습니다.");
+        }
+
+        boolean hasUnauthorized = list.stream().anyMatch(
+                toDo -> !toDo.getUser().getId().equals(user.getId()));
+
+        if(hasUnauthorized)
+            throw new InvalidJwtTokenException("게시글의 접근 권한이 없습니다.");
+
+        todoRepository.deleteAllInBatch(list);
+
+        return true;
+    }
 }

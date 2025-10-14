@@ -117,7 +117,7 @@ public class SecurityConfig {
         // 허용할 Origin (개발환경)
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",           // 로컬 개발
-                "http://13.124.204.209"            // 배포 환경
+                "http://13.124.204.209:3000"            // 배포 환경
         ));
 
         // 허용할 HTTP 메소드

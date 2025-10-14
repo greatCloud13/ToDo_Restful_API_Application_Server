@@ -3,7 +3,7 @@ name: Todo web application API prj CI/CD with Docker
 #언제 실행하는지 설정 (트리거 설정)
 on:
   push:
-    branches: [develop]
+    branches: [develop, main]
    # 개발 브랜치는 핵심이기에 항상 검증 시행
   pull_request:
     branches: [main]
@@ -96,7 +96,7 @@ jobs:
                 environment:
                   - SPRING_PROFILES_ACTIVE=docker
                 restart: unless-stopped
-              
+            
               mysql:
                 image: mysql:8.0
                 environment:
@@ -110,9 +110,87 @@ jobs:
                   - mysql_data:/var/lib/mysql
                 restart: unless-stopped
             
+              nginx:
+                image: nginx:alpine
+                ports:
+                  - "80:80"
+                depends_on:
+                  - app
+                volumes:
+                  - ./nginx.conf:/etc/nginx/nginx.conf:ro
+                  - ./react-build:/usr/share/nginx/html:ro
+                restart: unless-stopped
+            
             volumes:
               mysql_data:
             EOF
+            
+            # Nginx 설정 파일 생성
+            cat > nginx.conf << 'EOF'
+            events {
+                worker_connections 1024;
+            }
+            
+            http {
+                include /etc/nginx/mime.types;
+                default_type application/octet-stream;
+            
+                server {
+                    listen 80;
+                    server_name _;
+            
+                    # React 정적 파일
+                    location / {
+                        root /usr/share/nginx/html;
+                        try_files $uri $uri/ /index.html;
+                    }
+            
+                    # API 프록시
+                    location /api/ {
+                        proxy_pass http://app:8080;
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                    }
+            
+                    location /todos/ {
+                        proxy_pass http://app:8080;
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                    }
+            
+                    location /dashboard/ {
+                        proxy_pass http://app:8080;
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                    }
+            
+                    location /calendar/ {
+                        proxy_pass http://app:8080;
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                    }
+            
+                    location /analytics/ {
+                        proxy_pass http://app:8080;
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                    }
+                }
+            }
+            EOF
+            
+            # React 빌드 디렉토리 생성 (나중에 업로드할 위치)
+            mkdir -p react-build
             
             # 새 이미지 다운로드 및 실행
             sudo docker compose pull app
@@ -123,7 +201,7 @@ jobs:
             sudo docker compose ps
             
 
-      # LEV 9. 테스트 결과 저장 (디버깅용)
+      # LEV 10. 테스트 결과 저장 (디버깅용)
       - name: Test result save
         uses: actions/upload-artifact@v4
         if: always() # 성공/실패 관계없이 항상 업로드
@@ -132,7 +210,7 @@ jobs:
           path: build/reports/tests/test/
           # 테스트 실패 시 어떤 테스트가 실패했는지 분석 가능
 
-      # LEV 10. 배포 완료 알림
+      # LEV 11. 배포 완료 알림
       - name: Deployment Status
         run: |
           echo "CI/CD Pipeline Success!"

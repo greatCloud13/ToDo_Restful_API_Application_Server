@@ -47,7 +47,7 @@ public class ToDoController {
                     Pageable  pageable
                     """
     )
-    @GetMapping
+    @GetMapping(value = {"", "/"})
     public ResponseEntity<Page<ToDoResponseDTO>> getUserTodos(Pageable pageable){
 
         User user = securityUtils.getCurrentUserOrThrow();

@@ -71,4 +71,11 @@ public interface ToDoService {
      */
     public List<ToDoResponseDTO> bulkUpdate(BulkUpdateRequest request);
 
+    /**
+     * 요청한 ID의 할 일 일괄 삭제
+     * @param request 삭제할 할 일 ID
+     * @return 결과
+     */
+    public boolean bulkDelete(List<Long> request);
+
 }

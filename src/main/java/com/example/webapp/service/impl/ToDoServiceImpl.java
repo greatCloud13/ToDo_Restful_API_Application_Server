@@ -33,6 +33,7 @@ public class ToDoServiceImpl implements ToDoService {
     private final TodoRepository todoRepository;
 
     @Override
+    @Transactional
     public ToDoResponseDTO findTodoById(int id, String username) {
         log.info("할 일 조회 고유 id: {}",id);
 
@@ -163,5 +164,29 @@ public class ToDoServiceImpl implements ToDoService {
         return list.stream()
                 .map(ToDoResponseDTO :: from)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    @InjectUserEntity
+    public boolean bulkDelete(List<Long> request) {
+
+        User user = UserContext.getCurrentUser();
+
+        List<ToDo> list = todoRepository.findAllById(request);
+
+        if(request.size()!=list.size()){
+            throw new EntityNotFoundException("일부 게시글을 찾을 수 없습니다.");
+        }
+
+        boolean hasUnauthorized = list.stream().anyMatch(
+                toDo -> !toDo.getUser().getId().equals(user.getId()));
+
+        if(hasUnauthorized)
+            throw new InvalidJwtTokenException("게시글의 접근 권한이 없습니다.");
+
+        todoRepository.deleteAllInBatch(list);
+
+        return true;
     }
 }

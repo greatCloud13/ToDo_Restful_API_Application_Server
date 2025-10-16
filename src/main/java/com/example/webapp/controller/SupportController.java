@@ -51,7 +51,7 @@ public class SupportController {
             description = """
                     ## QNA 리스트 조회 API
                     등록한 QNA 리스트를 조회합니다.
-                    - 개발일자:
+                    - 개발일자: 2025-10-15
                     - 수정일자:
                     
                     ### 필수 입력 항목
@@ -62,6 +62,25 @@ public class SupportController {
     public ResponseEntity<Page<QnaDTO>> getQnaList(Pageable pageable){
 
         Page<QnaDTO> result = qnaService.getQnaList(pageable);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(
+            summary = "QNA 상세 조회",
+            description = """
+                    ## QNA 상세 조회 API
+                    등록되어 있는 QNA의 상세정보를 조회합니다.
+                    - 개발일자: 2025-10-16
+                    - 수정일자:
+                    
+                    ### 필수 입력 항목
+                    """
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<QnaDTO> getQna(@PathVariable Long id){
+
+        QnaDTO result = qnaService.getQna(id);
 
         return ResponseEntity.ok(result);
     }

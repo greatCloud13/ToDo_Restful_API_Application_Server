@@ -5,6 +5,7 @@ import com.example.webapp.DTO.request.QnaRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.naming.NoPermissionException;
 import java.util.List;
 
 public interface QnaService {
@@ -22,6 +23,13 @@ public interface QnaService {
      * @return QnaDTO 리스트
      */
     Page<QnaDTO> getQnaList(Pageable pageable);
+
+    /**
+     * Qna 상세 조회
+     * @param id QNA 고유 ID
+     * @return QnaDTO 객체
+     */
+    QnaDTO getQna(Long id);
     
     
 }

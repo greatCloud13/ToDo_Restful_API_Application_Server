@@ -9,12 +9,12 @@ import com.example.webapp.entity.Qna;
 import com.example.webapp.entity.User;
 import com.example.webapp.repository.QnaRepository;
 import com.example.webapp.service.QnaService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +48,21 @@ public class QnaServiceImpl implements QnaService {
         Page<Qna> result = qnaRepository.findAllByOwner(user, pageable);
 
         return result.map(QnaDTO :: from);
+    }
+
+    @Override
+    @InjectUserEntity
+    public QnaDTO getQna(Long id){
+
+        User user = UserContext.getCurrentUser();
+
+        Qna qna = qnaRepository.findByIdWithOwner(id)
+                .orElseThrow(()-> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+
+        if(qna.getOwner().equals(user)){
+            throw new AccessDeniedException("접근 권한이 없는 게시글 입니다.");
+        }
+
+        return QnaDTO.from(qna);
     }
 }

@@ -77,6 +77,8 @@ public class QnaDTO {
                 .owner(qna.getOwner().getUsername())
                 .respondent("admin")
                 .isAnswered(qna.getIsAnswered())
+                .createdAt(qna.getCreatedAt())
+                .answeredAt(qna.getUpdatedAt())
                 .build();
 
     }

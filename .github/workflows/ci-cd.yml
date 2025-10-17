@@ -146,6 +146,12 @@ jobs:
                         proxy_http_version 1.1;
                         proxy_set_header Host $host;
                     }
+            
+                    location /support/ {
+                        proxy_pass http://app:8080;
+                        proxy_http_version 1.1;
+                        proxy_set_header Host $host;
+                    }
                 }
             }
             NGINX_EOF

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@Profile("dev") // 개발 환경에서만 실행
+@Profile({"dev","prod","docker"})
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
@@ -57,13 +57,13 @@ public class DataLoader implements CommandLineRunner {
         User admin = User.builder()
                 .username("admin")
                 .email("admin@example.com")
-                .password(passwordEncoder.encode("admin123"))
+                .password(passwordEncoder.encode("Qlalfqjsgh123!"))
                 .role(Role.ADMIN)
                 .enabled(true)
                 .build();
 
         userRepository.save(admin);
-        log.info("관리자 계정 생성: username=admin, password=admin123");
+        log.info("관리자 계정 생성 완료");
     }
 
     /**

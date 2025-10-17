@@ -1,13 +1,16 @@
 package com.example.webapp.controller;
 
 import com.example.webapp.DTO.QnaDTO;
+import com.example.webapp.DTO.request.QnaAnswerRequestDTO;
 import com.example.webapp.DTO.request.QnaRequestDTO;
+import com.example.webapp.entity.Qna;
 import com.example.webapp.service.QnaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -84,5 +87,72 @@ public class SupportController {
 
         return ResponseEntity.ok(result);
     }
+
+    @Operation(
+            summary = "QNA 답변",
+            description = """
+                    ## QNA 답변 API
+                    등록되어 있는 QNA 답변을 등록합니다.
+                    - 개발일자: 2025-10-17
+                    - 수정일자:
+                    
+                    ### 필수 입력 항목
+                    """
+    )
+    @PatchMapping("/{id}")
+    public ResponseEntity<QnaDTO> answerQna(@PathVariable Long id, @RequestBody QnaAnswerRequestDTO request){
+
+        QnaDTO result = qnaService.answerQna(id, request);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(
+            summary = "QNA 삭제",
+            description = """
+                    ## QNA 삭제 API
+                    등록되어 있는 QNA를 삭제합니다.
+                    - 개발일자: 2025-10-17
+                    - 수정일자:
+                    
+                    ### 필수 입력 항목
+                    """
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteQna(@PathVariable Long id){
+
+        Boolean result = qnaService.deleteQna(id);
+
+        return ResponseEntity.ok(result);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -11,7 +11,7 @@ on:
 
 jobs:
   #CI/CD 작업 정의 (테스트+빌드+Docker 배포)
-  test:
+  Application Server Deploy:
     runs-on: ubuntu-latest #무료, 빠르고 안정적이므로 선정
 
     steps:

@@ -154,7 +154,6 @@ jobs:
                 }
             }
             NGINX_EOF
-            fi
             
             # react-build 디렉토리 생성 (없으면)
             mkdir -p ~/react-build

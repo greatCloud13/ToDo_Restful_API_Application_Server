@@ -155,19 +155,19 @@ public class JwtTokenProvider {
             return true;
         }catch (ExpiredJwtException e){
             log.warn("만료된 JWT 토큰: {}", e.getMessage());
-            throw new ExpiredJwtTokenException("토큰이 만료되었습니다", e);
+            return false;
         }catch(UnsupportedJwtException e){
             log.warn("지원하지 않는 JWT 토큰: {}", e.getMessage());
-            throw new UnsupportedJwtTokenException("지원하지 않는 토큰입니다", e);
+            return false;
         }catch(MalformedJwtException e){
             log.warn("잘못된 JWT 토큰: {}", e.getMessage());
-            throw new InvalidJwtTokenException("잘못된 형식의 토큰입니다", e);
+            return false;
         }catch(SecurityException e){
             log.warn("JWT 서명이 유효하지 않습니다: {}", e.getMessage());
-            throw new InvalidJwtTokenException("토큰 서명이 유효하지 않습니다", e);
+            return false;
         }catch(IllegalArgumentException e){
             log.warn("JWT 토큰이 비어있습니다: {}", e.getMessage());
-            throw new InvalidJwtTokenException("토큰이 비어있습니다", e);
+            return false;
         }
     }
 
